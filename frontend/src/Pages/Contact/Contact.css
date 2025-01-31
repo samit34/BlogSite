@@ -1,0 +1,133 @@
+/* Contact.css */
+
+.contact-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  .contact-left {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+  }
+  
+  .contact-image {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .contact-right {
+    flex: 1;
+    min-width: 300px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .contact-right h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .contact-form .form-label {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .contact-form .required {
+    color: red;
+  }
+  
+  .contact-form .name-fields {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .contact-form .input-field {
+    flex: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .contact-form .input-field.full-width {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .contact-form .textarea-field {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .contact-form .submit-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .contact-form .submit-button:hover {
+    background-color: #e43d3d;
+  }
+  .contact-image {
+    width: 100%;
+    /* max-width: 100%; */
+    /* border-radius: 10px; */
+    height: 30rem;
+    object-fit: cover;
+}
+  @media screen and (max-width:650px) {
+    .contact-image {
+      object-fit: cover;
+    width: 100%;
+      height: 30rem;
+    
+  }
+
+  
+.contact-container {
+  display: flex;
+     flex-direction: column-reverse;
+}
+
+.contact-left{
+  width: 100%;
+}
+
+}
+
+
+  @media screen and (max-width:450px) {
+    .contact-image {
+      object-fit: cover;
+    width: 100%;
+      height: 10rem;
+    
+  }
+ 
+  .contact-left{
+    width: 100%;
+  }
+
+}

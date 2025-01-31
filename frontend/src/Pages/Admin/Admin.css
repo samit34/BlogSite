@@ -1,0 +1,198 @@
+
+
+
+
+.blog-page-heading h1{
+  text-align: center;
+  color: black;
+}
+
+
+.sec-admin{
+    background: white;
+   display: flex;
+   flex-direction: column;
+justify-content: center;
+align-items: center;
+margin-top: 0rem;
+/* padding: 2rem 0px; */
+padding: 2rem 0px 3.5rem 0px;
+color:  black rtant
+}
+
+
+.admin {
+    width: 100%;
+    max-width: 800px;
+
+    /* background: rgba(255, 255, 255, 0.2);  */
+    border: 1px solid black;
+     
+    backdrop-filter: blur(10px); 
+    /* -webkit-backdrop-filter: blur(10px); */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 70px 50px; 
+  
+
+    
+  }
+  .admin input , .admin .ql-container ,.ql-toolbar{
+    background-color: white;
+    
+  }
+  .admin input ,  .quill {
+      border: 1px solid black;
+    
+  }
+  
+  .ql-toolbar{
+border: 1px solid black;
+  }
+  .ql-container{
+ border: 1px solid black;
+  }
+
+
+  .admin h1{
+        font-size: 1rem;
+  }
+  /* Centering content and creating spacing */
+  .admin .text-center {
+    text-align: center;
+  }
+  
+  /* Styling for the input section */
+  .blog-heading-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin-bottom: 15px ;
+    border: 1px solid black;
+    /* border-radius: 8px; */
+    outline: none;
+  }
+  
+ 
+  
+  /* Styling for Quill (ReactQuill) editor */
+  .ReactQuill {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .ReactQuill .ql-editor {
+    min-height: 200px;
+    padding: 10px;
+    border: 1px solid black;
+    /* border-radius: 8px; */
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Category dropdown styles */
+  .dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .show li :hover{
+       
+    color: white;
+  }
+
+  
+  .dropdown-toggle {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff6f61;
+    color: black;
+    /* border-radius: 8px; */
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  .dropdown-toggle:focus {
+    outline: none;
+  }
+  
+  .dropdown-item {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+  
+  .dropdown-item:hover {
+    background-color: black;
+  }
+  
+  .dropdown-menu .dropdown-item {
+    cursor: pointer;
+  }
+  
+ 
+  
+
+
+.photo-admin{
+  width: 100%;
+}
+
+.heading-admin{
+  width: 100%;
+}
+
+.thumnail-admin{
+  width: 100%;
+}
+
+.admin-blog{
+  width: 100%;
+}
+
+button.admint-btn-cat {
+  background-color: black;
+  padding:10px;
+  width:18rem;
+  border:none;
+  /* border-radius:50px; */
+  margin-top:1rem;
+  color: white;
+}
+.dropdown-menu{
+  width: 18rem;
+    text-align: center;
+}
+button.post-btn {
+  width:11rem;
+  background-color:black;
+  color: white;
+  border: none;
+  margin-top:1rem;
+  padding:10px;
+  align-content:center;
+}
+
+
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 768px) {
+    .admin {
+      padding: 20px;
+    }
+  
+    .blog-heading-input, .ReactQuill {
+      width: 100%;
+    }
+  
+    .dropdown-toggle {
+      font-size: 1rem;
+    }
+  
+    .btn {
+      width: 100%;
+      font-size: 1.1rem;
+      padding: 12px;
+    }
+  }
+  
+  

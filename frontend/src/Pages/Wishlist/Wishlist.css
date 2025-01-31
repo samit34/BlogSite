@@ -1,0 +1,285 @@
+
+.blog-card {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e7e7e7;
+
+}
+
+.blog-card img{
+   height: 12rem;
+    width: 100%;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+.blog-card h1{
+    font-size: 1.5rem;
+    height: 65px;
+    align-content: center;
+    text-align: center;
+    
+}
+p{
+    margin: 0px !important;
+  }
+
+  .blog-content{
+  
+    height: 8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+  }
+  .wish-like , .dislike{
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    color: blACK;
+    /* width: 0px; */
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .wishlist-btn{
+    /* padding: 3px 9px; */
+   color: #3c8bec;
+   
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+
+  .card-buttons{
+    display: flex
+    ;
+        gap: 1rem;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+  }
+  .card-heading{
+    display: flex;
+    align-items: center;
+    /* height: 4rem; */
+    justify-content: center;
+    font-weight: 800;
+    width: 100%;
+    text-align: center;
+  }
+
+  .card-buttons .add-item{
+    border: none;
+    color: white;
+    background-color: #98b880;
+  }
+  .wishlist-main{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr  1fr;
+    gap: 8px;
+    margin: 2rem;
+  }
+
+  .nav-inner{
+    background: #3c8bec12;
+    padding: 15px 18px;
+    border-radius: 10px;
+    border: 1px solid #dad7d7;
+  }
+
+
+
+  @media screen and (max-width:1200px) {
+    .wishlist-main{
+      display: grid;
+      grid-template-columns:  1fr 1fr 1fr;
+      gap: 40px;
+  
+    }
+  }
+
+  @media screen and ( max-width:1024px ){
+  
+    .blog-main-section{
+      display: grid;
+      grid-template-columns:  1fr 1fr;
+      gap: 40px;
+  
+    }
+  
+    .page-btn {
+       
+      width: 10%;
+      
+  }
+  
+  }
+  
+  
+  @media screen and ( max-width:768px ){
+    
+    .blog-main-section{
+      display: grid;
+      grid-template-columns:   1fr;
+      gap: 40px;
+    }
+   
+  
+  
+      .page-btn {
+       
+        width: 22%;
+        
+    }
+  
+  }
+  
+  
+  @media screen and ( max-width:768px ){
+  
+    .blog-card img {
+  
+      height:20rem  !important;
+    }
+
+    .nav-lower{
+          width: 100%;
+    }
+  
+    .card-buttons{
+      height: 5rem;
+    }
+    .account-logo{
+      width: 100%;
+    }
+  }
+  
+  
+  @media screen and ( max-width:575px ){
+  
+    .blog-card img {
+  
+      height:15rem  !important;
+    }
+  
+    .account-logo{
+      width: 100%;
+    }
+  
+    .card-buttons{
+      height: 3rem;
+    }
+  }
+  
+  @media screen and (max-width:400px) {
+  
+    .addblog {
+      
+      padding: 7px 7px !important ;}
+    
+  }
+  
+  
+  @media screen and (max-width:340px) {
+  
+    .addblog {
+      
+      padding: 7px 3px !important;
+    
+       font-size: 15px;}
+    
+  }
+
+
+
+/* new desing css */
+
+  .col-md-12.blog-inner-container {
+    display:flex;
+    flex-wrap:wrap;
+    
+}
+
+
+.cards img{
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  position: relative;
+}
+
+.inner-card a {
+  color: black;
+  text-decoration: none;
+}
+
+.card-detail {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  bottom: 0px;
+}
+
+.card-content{
+  padding-top: 1rem;
+}
+.col-md-8.blog-inner-container {
+  display:flex;
+  flex-wrap:wrap
+}
+.cards{
+  padding: 2rem;
+}
+
+
+/* latest blog css */
+
+.main-blog-container.container {
+  position:relative;
+}
+
+
+.latest-cards{
+  padding:1rem;
+}
+
+.latest-inner-card  a {
+  display:flex;
+  width:100%;
+  /* height:4rem; */
+  gap:1rem;
+  color: black;
+  text-decoration: none;
+  
+  }
+.latest-inner-card img{
+  width:5rem;
+  height:4rem;
+  object-fit:cover;
+}
+
+.latest-card-heading p {
+  font-weight:700
+}
+
+
+.bookmark-icon{
+  position: absolute;
+  z-index: 2;
+  font-size: xx-large;
+  color: white;
+  margin: 1rem;
+  margin-top: 0rem;
+}
+
+
+.wishlist-container{
+  margin-top: 2rem;
+}

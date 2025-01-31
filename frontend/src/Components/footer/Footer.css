@@ -1,0 +1,112 @@
+/* Footer Component CSS */
+.section-seventeen {
+    background: black;
+    padding: 40px 15px;
+  }
+  
+  /* .inner-seventeen {
+    
+  } */
+  
+  .col-one h2 {
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+  
+  .col-one h2::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: white;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
+  
+  .box p {
+    margin: 5px 0;
+    color: white;
+    font-size: 14px;
+  }
+  
+
+
+  .box a {
+    margin: 5px 0;
+    color: white;
+    font-size: 14px;
+    text-decoration: none !important;
+    margin: 0px;
+  }
+
+
+  .box h4 {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+
+  .footer-header{
+    display: flex;
+        
+        flex-direction: column;
+  }
+
+  .last-input {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 50px 0 0 50px;
+  }
+  
+  .nav-button {
+    background: black;
+    color: white;
+    /* padding: 10px 20px; */
+    border-radius: 0 50px 50px 0;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .nav-button:hover {
+    background: white;
+    color: black;
+  }
+  
+  .last-row .last-div p {
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .last-row .credits {
+    text-align: center;
+    margin-top: 10px;
+    color: white;
+  }
+  
+  .last-row .credits span {
+    color: white;
+    font-weight: 400;
+  }
+  
+  hr {
+    border: 0.5px solid #c7dee6;
+  }
+  
+  .sitename {
+    font-weight: 700;
+    color: white;
+  }
+  

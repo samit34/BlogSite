@@ -1,0 +1,86 @@
+
+
+
+/* Specificblog.css */
+
+/* Overall container for the specific blog */
+.specific-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1.5px solid black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Heading style */
+  .specific-container h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+  }
+  
+  /* Blog image styling */
+  .specific-container img {
+    width: 100%;
+    height: 30rem;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    object-fit: cover;
+  }
+  
+  /* Paragraph for blog content */
+  .specific-container p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: black;
+    text-align: justify;
+    margin-bottom: 30px;
+  }
+  
+  /* Like button styling */
+  .like {
+    display: flex;
+    align-items: center;
+    
+   
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+ 
+  
+  .like svg {
+    margin-right: 8px;
+  }
+  
+  /* Loading message */
+  .specific-container p {
+    font-size: 1.2rem;
+ 
+    /* text-align: center; */
+    margin-top: 50px;
+  }
+  
+  /* Small Screen Adjustments */
+  @media (max-width: 600px) {
+    .specific-container {
+      padding: 15px;
+    }
+  
+    .specific-container h2 {
+      font-size: 2rem;
+    }
+  
+    .like {
+      font-size: 1rem;
+      padding: 8px 16px;
+    }
+  }
+  

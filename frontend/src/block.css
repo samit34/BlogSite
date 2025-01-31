@@ -1,0 +1,64 @@
+ .cards img{
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+}
+
+.inner-card a {
+    color: black;
+    text-decoration: none;
+}
+
+.card-detail {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 20px;
+    font-weight: 700;
+    position: relative;
+    bottom: 0px;
+}
+
+.card-content{
+    padding-top: 1rem;
+}
+.col-md-8.blog-inner-container {
+    display:flex;
+    flex-wrap:wrap
+}
+.cards{
+    padding: 2rem;
+}
+
+
+.main-blog-container.container {
+    position:relative;
+}
+
+.col-xl-4.latest-blog {
+    position:absolute;
+    right:0px
+}
+
+.latest-cards{
+    padding:1rem;
+}
+
+.latest-inner-card  a {
+    display:flex;
+    width:100%;
+    
+    gap:1rem;
+    color: black;
+    text-decoration: none;
+    
+    }
+.latest-inner-card img{
+    width:5rem;
+    height:4rem;
+    object-fit:cover;
+}
+
+.latest-card-heading p {
+    font-weight:700
+}

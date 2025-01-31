@@ -1,0 +1,154 @@
+.login-page {
+  width:100%;
+  
+ 
+      display:flex;
+     flex-direction:column;
+         justify-content: center;
+         row-gap: 10px;
+              align-items:center;
+      height: 100vh;
+      background: white;
+  }
+
+
+  input.login-name-input {
+    /* border-radius:50px; */
+    width: 18rem;
+    text-indent: 6rem;
+    background-color: transparent;
+    color: black;
+    
+}
+
+input.login-password-input {
+  /* border-radius:50px; */
+color: black;
+  width: 18rem;
+  text-indent: 6rem;
+  background-color: transparent;
+  
+}
+.password{
+  position: relative;
+}
+
+.password-icon{
+  position: absolute;
+  top: 26px;
+  right: 1rem;
+  color: black ;
+
+}
+
+button.login-button {
+  width:18rem;
+  /* border-radius:50px; */
+ height:3rem;
+  background-color: white;
+  color: linear-gradient(350deg, rgba(52,68,188,1) 34%, rgba(63,167,255,1) 100%);
+  border: 1px solid #cccccc;
+  padding: 10px;
+ }
+
+
+ .login-button a{
+  text-decoration: none !important;
+ }
+
+input.login-password-input::placeholder{
+  color: black;
+}
+
+
+
+input.login-name-input::placeholder{
+  color: black;
+}
+
+/* input.login-name-input:focus{
+ border-color: #cccccc !important ;
+}
+input.login-password-input:focus{
+  border-color:  #cccccc;
+} */
+
+input.login-name-input,.login-password-input{
+ outline: none !important;
+}
+
+.login-name-input:hover::placeholder{
+  color: white;
+  
+}
+.login-password-input:hover::placeholder{
+  color: white;
+  
+}
+
+.login-name-input:hover  ,    .login-password-input:hover     {
+  fill: white;
+  background-color: black;
+  color: white;
+}
+
+
+.company-logo{
+  
+    border-radius: 40px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 16px;
+    background: rgba(255, 255, 255, 0.1);
+    align-items: center;
+  
+}
+
+.password-icon-first{
+  position: absolute;
+  left: 14px;
+  top: 1.5rem;
+ color: black;
+}
+
+
+.name{
+  position: relative;
+}
+
+
+.login-name-icon{
+  position: absolute;
+  left: 1rem;
+  top: 1.5rem;
+  color: black;
+}
+
+
+.name:hover .login-name-icon{
+  color: white;
+}
+.password:hover .password-icon-first{
+  color: white;
+}
+
+.password:hover .password-icon{
+  color: white;
+}
+
+.login-password-input , .login-name-input {
+  width: 98%;
+  padding: 12px;
+  font-size: 1rem;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
+
+
+
+
