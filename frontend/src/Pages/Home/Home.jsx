@@ -46,7 +46,7 @@ const Home = React.memo(() => {
 
   useEffect(() => {
     axios
-      .get("/user/homecategory")
+      .get("https://blogsite-208j.onrender.com/user/homecategory")
       .then((res) => {
         setHomecat(res.data);
       })
@@ -63,7 +63,7 @@ const Home = React.memo(() => {
     const token = localStorage.getItem("token");
     axios
       .post(
-        "/user/wishlist",
+        "https://blogsite-208j.onrender.com/user/wishlist",
         { id },
         {
           headers: { Authorization: `bearer ${token}` },
@@ -253,7 +253,7 @@ const Home = React.memo(() => {
                           </button>
                           <Link to={`/layout/specificblog/${blog._id}`}>
                             <img
-                              src={`/uploads/${blog.image}`}
+                              src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
                               alt="there is a image"
                             />
                             <div className="card-content ">

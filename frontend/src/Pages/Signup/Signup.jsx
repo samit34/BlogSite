@@ -36,7 +36,7 @@ const Signup = () => {
     };
 
     axios
-      .post('/user/signup', data)
+      .post('https://blogsite-208j.onrender.com/user/signup', data)
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         const tok = res.data.token;
