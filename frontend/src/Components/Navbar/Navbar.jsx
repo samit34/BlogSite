@@ -47,7 +47,7 @@ const Navbar = ({ setSerach, serach }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/user/homecategory")
+      .get("https://blogsite-208j.onrender.com/user/homecategory")
       .then((res) => {
         setHomecat(res.data);
       })
@@ -83,7 +83,7 @@ const Navbar = ({ setSerach, serach }) => {
             <div className="col-12 slide-bar ">
               <div className="slid-com  col-10">
                 <Link to={"/layout/account"}> Account </Link>
-                <Link to={"/layout/blogs"}> Blogs</Link>
+                <Link to={"/layout/blog"}> Blogs</Link>
                 <Link to={"/layout/wishlist"}> Wishlist</Link>
                 {token ? (
                   <Link onClick={() => logout()}> Logout</Link>

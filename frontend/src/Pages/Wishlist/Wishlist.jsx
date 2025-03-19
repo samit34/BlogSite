@@ -16,7 +16,7 @@ const Wishlist = ({ val, serach }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/user/homecategory")
+      .get("https://blogsite-208j.onrender.com/user/homecategory")
       .then((res) => {
         setHomecat(res.data);
       })
@@ -29,7 +29,7 @@ const Wishlist = ({ val, serach }) => {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/wish",
+        "https://blogsite-208j.onrender.com/user/wish",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -27,7 +27,7 @@ const AccountPage = () => {
 
     axios
       .post(
-        "http://localhost:8000/user/account",
+        "https://blogsite-208j.onrender.com/user/account",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -59,7 +59,7 @@ const AccountPage = () => {
 
       axios
         .post(
-          "http://localhost:8000/user/photo",
+          "https://blogsite-208j.onrender.com/user/photo",
           {},
           {
             headers: {
@@ -89,7 +89,7 @@ const AccountPage = () => {
     formData.append("photo", file);
 
     axios
-      .post("http://localhost:8000/user/photo", formData, {
+      .post("https://blogsite-208j.onrender.com/user/photo", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -124,7 +124,7 @@ const AccountPage = () => {
     console.log("this is a id in deletecard", id);
 
     axios
-      .post("http://localhost:8000/user/card", { id })
+      .post("https://blogsite-208j.onrender.com/user/card", { id })
       .then((res) => {
         console.log("there is a  responsse of deletecard ", res);
         fetchAccountData();
@@ -143,7 +143,7 @@ const AccountPage = () => {
             <div className="photo ">
               <div className="profile-pic-container">
                 <img
-                  src={`http://localhost:8000/uploads/${profilePic}`}
+                  src={`https://blogsite-208j.onrender.com/uploads/${profilePic}`}
                   alt="Profile"
                   className="profile-pic"
                 />
