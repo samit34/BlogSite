@@ -27,7 +27,7 @@ const Admin = () => {
 
         const token = localStorage.getItem('token');
         axios
-            .get('http://localhost:8000/user/showcategories', {
+            .get('https://blogsite-208j.onrender.com/user/showcategories', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -65,7 +65,7 @@ const Admin = () => {
         const token = localStorage.getItem('token');
 
         axios
-            .post('http://localhost:8000/user/upload', formData, {
+            .post('https://blogsite-208j.onrender.com/user/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,

@@ -30,7 +30,7 @@ const Specificblog = () => {
 
   const oneblog = async () => {
     try {
-      const res = await axios.post(`http://localhost:8000/user/specificblog/${id}`);
+      const res = await axios.post(`https://blogsite-208j.onrender.com/user/specificblog/${id}`);
       setBlog(res.data[0]);
     } catch (err) {
       setError("Failed to fetch blog. Please try again.");
@@ -48,7 +48,7 @@ const Specificblog = () => {
     // setWishlistLoading(true);
     const token = localStorage.getItem("token");
     try {
-      await axios.post('http://localhost:8000/user/wishlist', { id }, {
+      await axios.post('https://blogsite-208j.onrender.com/user/wishlist', { id }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Card added successfully");
@@ -57,22 +57,7 @@ const Specificblog = () => {
     } 
   };
 
-  // Utility to shuffle an array
-  // const shuffleArray = (array) => {
-  //   return array
-  //     .map((item) => ({ ...item, sort: Math.random() }))
-  //     .sort((a, b) => a.sort - b.sort)
-  //     .map((item) => item);
-  // };
-
-  // // Filter and shuffle related blogs
-  // const getRandomBlogs = () => {
-  //   if (!Array.isArray(blog)) return [];
-  //   const filteredBlogs = blog.filter((b) => b._id !== sblog?._id); // Exclude the current blog
-  //   return shuffleArray(filteredBlogs).slice(0, 3); // Get 2 random blogs
-  // };
-
-  // const relatedBlogs = getRandomBlogs();
+ 
 
   return (
     <> 
@@ -93,7 +78,7 @@ const Specificblog = () => {
             ></div>
 
             <img
-              src={`http://localhost:8000/uploads/${sblog.image}`}
+              src={`https://blogsite-208j.onrender.com/uploads/${sblog.image}`}
               alt={sblog.heading || "Blog Image"}
             />
             <p
@@ -125,7 +110,7 @@ const Specificblog = () => {
                   </Link>
                   <Link to={`/layout/specificblog/${b._id}`}>
                     <img
-                      src={`http://localhost:8000/uploads/${b.image}`}
+                      src={`https://blogsite-208j.onrender.com/uploads/${b.image}`}
                       alt="Blog Image"
                     />
                     <div

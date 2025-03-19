@@ -38,7 +38,7 @@ const Superadmin = () => {
     console.log("this is a id in deletecard", id);
 
     axios
-      .post("http://localhost:8000/user/card", { id })
+      .post("https://blogsite-208j.onrender.com/user/card", { id })
       .then((res) => {
         console.log("there is a  responsse of deletecard ", res);
         fetchBlogs();
@@ -58,7 +58,7 @@ const Superadmin = () => {
 
     // Save the new category to the database
     axios
-      .post("http://localhost:8000/user/categories", { category: newCategory })
+      .post("https://blogsite-208j.onrender.com/user/categories", { category: newCategory })
       .then((res) => {
         setCategories([...categories, res.data.newCategory]);
         console.log("this is a response of handleaddcategory", res);
@@ -74,7 +74,7 @@ const Superadmin = () => {
   const shows = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8000/user/showcategories", {
+      .get("https://blogsite-208j.onrender.com/user/showcategories", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -98,7 +98,7 @@ const Superadmin = () => {
 
   const fetchuser = () => {
     axios
-      .get("http://localhost:8000/user/showuser")
+      .get("https://blogsite-208j.onrender.com/user/showuser")
       .then((res) => {
         console.log("this is a res in showuser", res);
         setUser(res.data);
@@ -110,7 +110,7 @@ const Superadmin = () => {
   const deletehandle = (cat) => {
     console.log("this this", cat);
     axios
-      .post("http://localhost:8000/user/deletecategory", { cat })
+      .post("https://blogsite-208j.onrender.com/user/deletecategory", { cat })
       .then((res) => {
         console.log("this is delete responde ", res);
         shows();
@@ -122,7 +122,7 @@ const Superadmin = () => {
 
   const deleteuser = (username) => {
     axios
-      .post("http://localhost:8000/user/deleteuser", { username })
+      .post("https://blogsite-208j.onrender.com/user/deleteuser", { username })
       .then((res) => {
         alert("user delte sucessfully");
         console.log("response from", res);
@@ -138,7 +138,7 @@ const Superadmin = () => {
   const blockuser = (username) => {
     axios
       .post(
-        "http://localhost:8000/user/userblock",
+        "https://blogsite-208j.onrender.com/user/userblock",
         { username },
         {
           headers: { Authorization: `bearer ${token} ` },
@@ -286,7 +286,7 @@ const Superadmin = () => {
                       <div className="inner-card">
                         <Link to={`/layout/specificblog/${blog._id}`}>
                           <img
-                            src={`http://localhost:8000/uploads/${blog.image}`}
+                            src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
                             alt="there is a image"
                           />
                           <div className="card-content ">

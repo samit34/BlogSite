@@ -45,7 +45,7 @@ const Blog = ({ setSerach, serach }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/user/homecategory")
+      .get("https://blogsite-208j.onrender.com/user/homecategory")
       .then((res) => {
         setHomecat(res.data);
       })
@@ -68,7 +68,7 @@ const Blog = ({ setSerach, serach }) => {
     const token = localStorage.getItem("token");
     axios
       .post(
-        "http://localhost:8000/user/wishlist",
+        "https://blogsite-208j.onrender.com/user/wishlist",
         { id },
         {
           headers: { Authorization: `bearer ${token}` },
@@ -111,7 +111,7 @@ const Blog = ({ setSerach, serach }) => {
                     </Link>
                     <Link to={`/layout/specificblog/${blog._id}`}>
                       <img
-                        src={`http://localhost:8000/uploads/${blog.image}`}
+                        src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
                         alt="there is a image"
                       />
                       <div className="card-content ">
