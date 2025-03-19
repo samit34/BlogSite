@@ -60,7 +60,7 @@ const Wishlist = ({ val, serach }) => {
     const token = localStorage.getItem("token");
     axios
       .post(
-        "http://localhost:8000/user/deletecard",
+        "https://blogsite-208j.onrender.com/user/deletecard",
         { id },
         {
           headers: { Authorization: `bearer ${token}` },
@@ -103,7 +103,7 @@ const Wishlist = ({ val, serach }) => {
                     </Link>
                     <Link to={`/layout/specificblog/${blog._id}`}>
                       <img
-                        src={`http://localhost:8000/uploads/${blog.image}`}
+                        src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
                         alt="there is a image"
                       />
                       <div className="card-content ">

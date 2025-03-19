@@ -200,7 +200,7 @@ const AccountPage = () => {
                     <div className="inner-card">
                       <Link to={`/layout/specificblog/${blog._id}`}>
                         <img
-                          src={`http://localhost:8000/uploads/${blog.image}`}
+                          src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
                           alt="there is a image"
                         />
                         <div className="card-content ">
