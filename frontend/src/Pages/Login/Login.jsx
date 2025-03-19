@@ -28,7 +28,7 @@ const Login = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:8000/user/login", data); // Changed to POST
+      const res = await axios.post("/user/login", data); // Changed to POST
       console.log("Login response:", res.data.token);
 
       const newToken = res.data.token;

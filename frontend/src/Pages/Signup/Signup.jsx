@@ -36,7 +36,7 @@ const Signup = () => {
     };
 
     axios
-      .post('http://localhost:8000/user/signup', data)
+      .post('/user/signup', data)
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         const tok = res.data.token;

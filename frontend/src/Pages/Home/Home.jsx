@@ -293,6 +293,12 @@ const Home = React.memo(() => {
               )}
             </div>
             {/* </div> */}
+
+
+
+            {/* latest blog  */}
+
+            
             <div className="col-xl-4 latest-blog  ">
               <div className="latest-inner-container">
                 <h1 className="text-center">Latest Blog</h1>
