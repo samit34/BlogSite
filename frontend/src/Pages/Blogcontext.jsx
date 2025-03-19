@@ -13,7 +13,7 @@ const BlogContextProvider = ({ children }) => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/user/showblog");
+      const res = await axios.get("https://blogsite-208j.onrender.com/user/showblog");
 
       setBlog(res.data);
     } catch (err) {
@@ -31,7 +31,7 @@ const BlogContextProvider = ({ children }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/like",
+        "https://blogsite-208j.onrender.com/user/like",
         { id },
         {
           headers: {
@@ -58,7 +58,7 @@ const BlogContextProvider = ({ children }) => {
 
     try {
       await axios.post(
-        "http://localhost:8000/user/wishlist",
+        "https://blogsite-208j.onrender.com/user/wishlist",
         { id },
         {
           headers: {
