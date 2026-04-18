@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/client';
 import { useAuth } from '../Authcontext';
 import './Signup.css'
 import { FaUser } from "react-icons/fa";
@@ -35,8 +35,8 @@ const Signup = () => {
       password,
     };
 
-    axios
-      .post('https://blogsite-208j.onrender.com/user/signup', data)
+    api
+      .post('/user/signup', data)
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         const tok = res.data.token;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api, { API_BASE_URL } from "../../api/client";
+import listFromResponse from "../../api/listFromResponse";
 import { Link } from "react-router-dom";
 import "./Wishlist.css";
 import DOMPurify from "dompurify";
@@ -7,36 +8,20 @@ import { AiFillLike } from "react-icons/ai";
 import { useBlog } from "../Blogcontext";
 
 import { FaBookmark } from "react-icons/fa";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import { removeFromWishlistWithToast } from "../../utils/wishlistNotify";
 
-const Wishlist = ({ val, serach }) => {
+const Wishlist = ({ serach }) => {
   const { handleLike } = useBlog();
+  const { showToast } = useToast();
   const [wishblog, setWishblog] = useState([]);
 
-  const [homecat, setHomecat] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("https://blogsite-208j.onrender.com/user/homecategory")
-      .then((res) => {
-        setHomecat(res.data);
-      })
-      .catch((err) => {
-        console.log("this is a err in navbar", err);
-      });
-  }, []);
-
   const fetchWishlist = async () => {
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        "https://blogsite-208j.onrender.com/user/wish",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setWishblog(res.data);
-      console.log("Fetched wishlist:", res.data);
+      const res = await api.post("/user/wish", {});
+      const rows = listFromResponse(res);
+      setWishblog(rows);
+      console.log("Fetched wishlist:", rows);
     } catch (err) {
       console.error("Error fetching wishlist:", err);
     }
@@ -57,15 +42,8 @@ const Wishlist = ({ val, serach }) => {
   };
 
   const deletewish = (id) => {
-    const token = localStorage.getItem("token");
-    axios
-      .post(
-        "https://blogsite-208j.onrender.com/user/deletecard",
-        { id },
-        {
-          headers: { Authorization: `bearer ${token}` },
-        }
-      )
+    api
+      .post("/user/deletecard", { id })
       .then((res) => {
         console.log("card delete succesfully", res);
         fetchWishlist();
@@ -97,14 +75,18 @@ const Wishlist = ({ val, serach }) => {
               return (
                 <div key={index} className=" cards  col-md-4 text-black text">
                   <div className="inner-card">
-                    <Link className="" onClick={() => deletewish(blog._id)}>
-                      {" "}
-                      <FaBookmark className="bookmark-icon" />{" "}
-                    </Link>
+                    <button
+                      type="button"
+                      className="wishlist-remove"
+                      onClick={() => deletewish(blog._id)}
+                      aria-label="Remove from wishlist"
+                    >
+                      <FaBookmark className="bookmark-icon" />
+                    </button>
                     <Link to={`/layout/specificblog/${blog._id}`}>
                       <img
-                        src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
-                        alt="there is a image"
+                        src={`${API_BASE_URL}/uploads/${blog.image}`}
+                        alt=""
                       />
                       <div className="card-content ">
                         <p>{blog.category}</p>
@@ -126,7 +108,7 @@ const Wishlist = ({ val, serach }) => {
                       </p>
                       <button
                         className="like-home"
-                        onClick={() => handleLike(blog._id)}
+                        onClick={() => handleLikeAndRefresh(blog._id)}
                       >
                         {" "}
                         <AiFillLike /> {blog.liked.length}

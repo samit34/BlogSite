@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, Navigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import api, { API_BASE_URL } from "../../api/client";
+import listFromResponse from "../../api/listFromResponse";
 import "react-quill/dist/quill.snow.css";
 import "./Home.css";
 import DOMPurify from "dompurify";
@@ -22,6 +23,12 @@ import { HiBars3BottomLeft } from "react-icons/hi2";
 import { FaBookmark } from "react-icons/fa";
 import { useAuth } from "../Authcontext";
 import Footer from "../../Components/footer/Footer";
+import {
+  ScrollReveal,
+  ScrollRevealWide,
+} from "../../Components/motion/ScrollReveal";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import { addToWishlistWithToast } from "../../utils/wishlistNotify";
 
 const Home = React.memo(() => {
   const serachref = useRef();
@@ -29,6 +36,7 @@ const Home = React.memo(() => {
   const [serach, setSerach] = useState("");
   const token = localStorage.getItem("token");
   const { logout } = useAuth();
+  const { showToast } = useToast();
 
   const val = (id) => {
     setSerach(id);
@@ -40,15 +48,14 @@ const Home = React.memo(() => {
 
   // navbar finish here
   const { fetchBlogs, handleLike, blog } = useBlog();
-  const { showblogs, setShowblogs } = useState([blog]);
   const [homecat, setHomecat] = useState([]);
-  const [pages, setPages] = useState(1);
+  const [pages] = useState(1);
 
   useEffect(() => {
-    axios
-      .get("https://blogsite-208j.onrender.com/user/homecategory")
+    api
+      .get("/user/homecategory")
       .then((res) => {
-        setHomecat(res.data);
+        setHomecat(listFromResponse(res));
       })
       .catch((err) => {
         console.log("this is a err in navbar", err);
@@ -57,24 +64,10 @@ const Home = React.memo(() => {
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   const wishlist = (id) => {
-    const token = localStorage.getItem("token");
-    axios
-      .post(
-        "https://blogsite-208j.onrender.com/user/wishlist",
-        { id },
-        {
-          headers: { Authorization: `bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        alert("Card added succesfully");
-      })
-      .catch((err) => {
-        alert("card already added");
-      });
+    addToWishlistWithToast(api, id, showToast);
   };
 
   // const shuffleArray = (array) => {
@@ -228,20 +221,22 @@ const Home = React.memo(() => {
           </div>
         </div>
       </nav>
-      <TopBarSlider />
+      <ScrollRevealWide>
+        <TopBarSlider />
+      </ScrollRevealWide>
       <div className="container">
         <div className="blogsection">
-          <div className="main-blog-container container d-xl-flex ">
-            {/* <div className="mai-blog-row row"> */}
+          <ScrollRevealWide className="main-blog-container container d-xl-flex ">
             <div className="col-xl-8 blog-inner-container ">
               {filterblog.length > 0 ? (
                 filterblog
                   .slice(pages * 12 - 12, pages * 12)
                   .map((blog, index) => {
                     return (
-                      <div
-                        key={index}
+                      <ScrollReveal
+                        key={blog._id || index}
                         className=" cards  col-md-6 text-black text"
+                        delay={Math.min(index * 0.06, 0.54)}
                       >
                         <div className="inner-card">
                           <button
@@ -253,8 +248,8 @@ const Home = React.memo(() => {
                           </button>
                           <Link to={`/layout/specificblog/${blog._id}`}>
                             <img
-                              src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
-                              alt="there is a image"
+                              src={`${API_BASE_URL}/uploads/${blog.image}`}
+                              alt=""
                             />
                             <div className="card-content ">
                               <p>{blog.category}</p>
@@ -285,36 +280,32 @@ const Home = React.memo(() => {
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </ScrollReveal>
                     );
                   })
               ) : (
                 <p>there is no data </p>
               )}
             </div>
-            {/* </div> */}
 
-
-
-            {/* latest blog  */}
-
-            
             <div className="col-xl-4 latest-blog  ">
-              <div className="latest-inner-container">
-                <h1 className="text-center">Latest Blog</h1>
+              <ScrollReveal>
+                <div className="latest-inner-container">
+                  <h1 className="text-center">Latest Blog</h1>
 
-                {blog.length > 0 ? (
-                  blog.slice(pages * 7 - 7, pages * 7).map((blog, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="latest-cards   text-black text"
-                      >
+                  {blog.length > 0 ? (
+                    blog.slice(pages * 7 - 7, pages * 7).map((blog, index) => {
+                      return (
+                        <ScrollReveal
+                          key={blog._id || index}
+                          className="latest-cards   text-black text"
+                          delay={Math.min(index * 0.05, 0.45)}
+                        >
                         <div className=" latest-inner-card">
                           <Link to={`/layout/specificblog/${blog._id}`}>
                             <img
-                              src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
-                              alt="there is a image"
+                              src={`${API_BASE_URL}/uploads/${blog.image}`}
+                              alt=""
                             />
                             <div className="latest-card-content ">
                               <div
@@ -328,15 +319,16 @@ const Home = React.memo(() => {
                             </div>
                           </Link>
                         </div>
-                      </div>
+                      </ScrollReveal>
                     );
                   })
                 ) : (
                   <p>there is no data </p>
                 )}
-              </div>
+                </div>
+              </ScrollReveal>
             </div>
-          </div>
+          </ScrollRevealWide>
         </div>
       </div>
 

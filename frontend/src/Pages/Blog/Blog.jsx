@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, Navigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import api, { API_BASE_URL } from "../../api/client";
 import "react-quill/dist/quill.snow.css";
 import "./blog.css";
 import DOMPurify from "dompurify";
@@ -11,26 +11,14 @@ import { FaAngleLeft } from "react-icons/fa";
 import { FaAngleRight } from "react-icons/fa";
 
 import { FaBookmark } from "react-icons/fa";
+import { ScrollReveal } from "../../Components/motion/ScrollReveal";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import { addToWishlistWithToast } from "../../utils/wishlistNotify";
 
-const Blog = ({ setSerach, serach }) => {
-  // navbar start from here
-  const navRef = useRef();
-
-  const token = localStorage.getItem("token");
-
-  const showcom = () => {
-    navRef.current.classList.toggle("nav-active");
-  };
-
-  const val = (id) => {
-    setSerach(id);
-  };
-
-  // navbar finish here
-
+const Blog = ({ serach }) => {
   const { fetchBlogs, handleLike, blog } = useBlog();
+  const { showToast } = useToast();
 
-  const [homecat, setHomecat] = useState([]);
   const [counting, setCounting] = useState(0);
   const [pages, setPages] = useState(1);
   const properties_per_page = 12;
@@ -44,19 +32,8 @@ const Blog = ({ setSerach, serach }) => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://blogsite-208j.onrender.com/user/homecategory")
-      .then((res) => {
-        setHomecat(res.data);
-      })
-      .catch((err) => {
-        console.log("this is a err in navbar", err);
-      });
-  }, []);
-
-  useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   useEffect(() => {
     if (blog.length > 0) {
@@ -65,23 +42,7 @@ const Blog = ({ setSerach, serach }) => {
   }, [blog]);
 
   const wishlist = (id) => {
-    const token = localStorage.getItem("token");
-    axios
-      .post(
-        "https://blogsite-208j.onrender.com/user/wishlist",
-        { id },
-        {
-          headers: { Authorization: `bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        alert("Card added succesfully");
-        // console.log("this is  response of wishlist ", res);
-      })
-      .catch((err) => {
-        alert("card already added");
-        // console.log("this is a err of wishlis", err)
-      });
+    addToWishlistWithToast(api, id, showToast);
   };
   const filterblog = blog.filter((b) => {
     if (!b) return true;
@@ -100,9 +61,10 @@ const Blog = ({ setSerach, serach }) => {
           {filterblog.length > 0 ? (
             filterblog.slice(pages * 12 - 12, pages * 12).map((blog, index) => {
               return (
-                <div
-                  key={index}
+                <ScrollReveal
+                  key={blog._id || index}
                   className=" cards  col-md-6 col-xl-4 text-black text"
+                  delay={Math.min(index * 0.06, 0.54)}
                 >
                   <div className="inner-card">
                     <Link className="" onClick={() => wishlist(blog._id)}>
@@ -111,8 +73,8 @@ const Blog = ({ setSerach, serach }) => {
                     </Link>
                     <Link to={`/layout/specificblog/${blog._id}`}>
                       <img
-                        src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
-                        alt="there is a image"
+                        src={`${API_BASE_URL}/uploads/${blog.image}`}
+                        alt=""
                       />
                       <div className="card-content ">
                         <p>{blog.category}</p>
@@ -142,7 +104,7 @@ const Blog = ({ setSerach, serach }) => {
                       {/* <button className='whislist-card-btn' onClick={() => wishlist(blog._id)}>add</button> */}
                     </div>
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })
           ) : (

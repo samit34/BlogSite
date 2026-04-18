@@ -1,41 +1,131 @@
-// Import necessary modules
 import React from "react";
-import "./About.css"; // Optional CSS file for styling
+import "./About.css";
+import { ScrollReveal, ScrollRevealWide } from "../../Components/motion/ScrollReveal";
+import { FaPenFancy, FaCompass, FaUsers, FaHeart } from "react-icons/fa";
+import { SiMongodb, SiExpress, SiReact, SiNodedotjs } from "react-icons/si";
 
 const About = () => {
+  const features = [
+    {
+      icon: <FaPenFancy aria-hidden />,
+      title: "Stories & columns",
+      text: "Long reads, quick takes, and photo-led pieces—tagged by category so every issue of your feed feels intentional.",
+    },
+    {
+      icon: <FaCompass aria-hidden />,
+      title: "Wander the stacks",
+      text: "From culture and design to travel notes and weekend lists—browse by mood, save what resonates, and circle back anytime.",
+    },
+    {
+      icon: <FaUsers aria-hidden />,
+      title: "Readers in mind",
+      text: "Likes and wishlists keep your magazine rack personal; quiet typography and layout keep the focus on the words.",
+    },
+  ];
+
   return (
-    <>
-      <h1 className="text-center about-heading ">About Us</h1>
-      <div className="container about-container">
-        <p>
-          Welcome to our Blog Website! This platform is built using the MERN
-          stack (MongoDB, Express.js, React, and Node.js) and is designed to
-          provide a seamless experience for sharing and exploring blogs.
-        </p>
-        <p>
-          This website is the first project created by{" "}
-          <strong>Samit Dhiman</strong>. It is a versatile blog platform where
-          users can post blogs on a variety of topics and genres. Whether you
-          are passionate about technology, lifestyle, travel, or anything in
-          between, this site is here for you.
-        </p>
-        <p>
-          Our goal is to make it easy for people to share their thoughts and
-          ideas, connect with like-minded individuals, and explore a world of
-          knowledge and creativity.
-        </p>
-        <h2>Features:</h2>
-        <ul>
-          <li>Create and post your blogs effortlessly.</li>
-          <li>Explore blogs from different genres and interests.</li>
-          <li>Engage with the community through your posts.</li>
-        </ul>
-        <p>
-          Thank you for visiting our website. We hope you enjoy your experience
-          here!
-        </p>
+    <div className="about-page">
+      <section className="about-hero">
+        <div className="about-hero__bg" aria-hidden />
+        <div className="container about-hero__inner">
+          <ScrollRevealWide>
+            <p className="about-hero__eyebrow">Magazine &amp; blogs</p>
+            <h1 className="about-hero__title">About Chronic</h1>
+            <p className="about-hero__lead">
+              An independent online magazine for curious readers—essay-length features,
+              bite-sized posts, and everything in between, served in a calm, print-inspired layout.
+            </p>
+          </ScrollRevealWide>
+        </div>
+      </section>
+
+      <div className="container about-body">
+        <ScrollReveal>
+          <section className="about-section about-intro">
+            <h2 className="about-section__title">Our editorial note</h2>
+            <p className="about-intro__text">
+              Chronic started as a small idea: what if a blog felt less like a feed and
+              more like flipping through a weekend magazine? We mix essays, interviews,
+              field notes, and illustrated stories—always with room for new voices and odd angles.
+            </p>
+            <p className="about-intro__text">
+              Whether you are here for slow Sunday reads or five-minute coffee-break posts,
+              we hope you find something worth bookmarking—and maybe something worth sharing
+              at the dinner table.
+            </p>
+          </section>
+        </ScrollReveal>
+
+        <ScrollRevealWide>
+          <section className="about-section">
+            <h2 className="about-section__title">Inside the issue</h2>
+            <div className="about-features">
+              {features.map((f, i) => (
+                <ScrollReveal key={f.title} className="about-feature-card" delay={i * 0.08}>
+                  <div className="about-feature-card__icon">{f.icon}</div>
+                  <h3 className="about-feature-card__title">{f.title}</h3>
+                  <p className="about-feature-card__text">{f.text}</p>
+                </ScrollReveal>
+              ))}
+            </div>
+          </section>
+        </ScrollRevealWide>
+
+        {/* <ScrollReveal>
+          <section className="about-section about-stack">
+            <h2 className="about-section__title">Under the hood</h2>
+            <p className="about-stack__subtitle">
+              The site runs on a modern full-stack setup—quick pages, secure accounts, and
+              plenty of headroom as Chronic grows.
+            </p>
+            <ul className="about-stack__badges" aria-label="Technology stack">
+              <li className="about-stack__badge">
+                <SiMongodb /> MongoDB
+              </li>
+              <li className="about-stack__badge">
+                <SiExpress /> Express
+              </li>
+              <li className="about-stack__badge about-stack__badge--accent">
+                <SiReact /> React
+              </li>
+              <li className="about-stack__badge">
+                <SiNodedotjs /> Node.js
+              </li>
+            </ul>
+          </section>
+        </ScrollReveal> */}
+
+        <ScrollRevealWide>
+          <section className="about-author">
+            <div className="about-author__card">
+              <div className="about-author__accent" aria-hidden />
+              <div className="about-author__content">
+                <p className="about-author__label">Editorial</p>
+                <h2 className="about-author__name">The Chronic desk</h2>
+                <p className="about-author__bio">
+                  A rotating crew of editors, contributors, and guest writers keeps Chronic
+                  stocked with fresh threads—fiction sketches, city guides, opinion pieces,
+                  and the occasional rant we probably should have cut (but didn&apos;t).
+                  Pull up a chair; the next story is almost ready.
+                </p>
+                <div className="about-author__heart">
+                  <FaHeart aria-hidden /> <span>Made with care for readers &amp; writers</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </ScrollRevealWide>
+
+        <ScrollReveal>
+          <section className="about-outro">
+            <p>
+              Thanks for reading Chronic. Wander the archive, stash pieces in your wishlist,
+              and come back when you need a good story—there is always another page to turn.
+            </p>
+          </section>
+        </ScrollReveal>
       </div>
-    </>
+    </div>
   );
 };
 

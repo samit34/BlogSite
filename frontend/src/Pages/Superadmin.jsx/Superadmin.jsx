@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api, { API_BASE_URL } from "../../api/client";
+import listFromResponse from "../../api/listFromResponse";
 import "./Superadmin.css";
 import { useBlog } from "../Blogcontext";
 import DOMPurify from "dompurify";
-import { AiFillLike } from "react-icons/ai";
 
 import { Link } from "react-router-dom";
 const Superadmin = () => {
@@ -17,8 +17,6 @@ const Superadmin = () => {
   const userRef = useRef(null);
   const blogRef = useRef(null);
 
-  const token = localStorage.getItem("token");
-
   const toggleTab = (ref) => {
     categoryRef.current.classList.remove("super-active");
     userRef.current.classList.remove("super-active");
@@ -28,17 +26,17 @@ const Superadmin = () => {
   };
 
   //   all blog
-  const { fetchBlogs, handleLike, blog } = useBlog();
+  const { fetchBlogs, blog } = useBlog();
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   const deletecard = (id) => {
     console.log("this is a id in deletecard", id);
 
-    axios
-      .post("https://blogsite-208j.onrender.com/user/card", { id })
+    api
+      .post("/user/card", { id })
       .then((res) => {
         console.log("there is a  responsse of deletecard ", res);
         fetchBlogs();
@@ -49,16 +47,12 @@ const Superadmin = () => {
       });
   };
 
-  const like = async (id) => {
-    await handleLike(id);
-  };
-
   const handleAddCategory = () => {
     console.log("Adding new category:", newCategory);
 
     // Save the new category to the database
-    axios
-      .post("https://blogsite-208j.onrender.com/user/categories", { category: newCategory })
+    api
+      .post("/user/categories", { category: newCategory })
       .then((res) => {
         setCategories([...categories, res.data.newCategory]);
         console.log("this is a response of handleaddcategory", res);
@@ -72,16 +66,12 @@ const Superadmin = () => {
   };
 
   const shows = () => {
-    const token = localStorage.getItem("token");
-    axios
-      .get("https://blogsite-208j.onrender.com/user/showcategories", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    api
+      .get("/user/showcategories")
       .then((res) => {
-        setCategories(res.data);
-        console.log("this is shows funcation responsse", res.data);
+        const rows = listFromResponse(res);
+        setCategories(rows);
+        console.log("this is shows funcation responsse", rows);
       })
       .catch((err) =>
         console.log("the use effect funcation error is here", err)
@@ -97,11 +87,12 @@ const Superadmin = () => {
   }, []);
 
   const fetchuser = () => {
-    axios
-      .get("https://blogsite-208j.onrender.com/user/showuser")
+    api
+      .get("/user/showuser")
       .then((res) => {
+        const rows = listFromResponse(res);
         console.log("this is a res in showuser", res);
-        setUser(res.data);
+        setUser(rows);
       })
       .catch((err) => {
         console.log("this is err in show user in frontend", err);
@@ -109,8 +100,8 @@ const Superadmin = () => {
   };
   const deletehandle = (cat) => {
     console.log("this this", cat);
-    axios
-      .post("https://blogsite-208j.onrender.com/user/deletecategory", { cat })
+    api
+      .post("/user/deletecategory", { cat })
       .then((res) => {
         console.log("this is delete responde ", res);
         shows();
@@ -121,8 +112,8 @@ const Superadmin = () => {
   };
 
   const deleteuser = (username) => {
-    axios
-      .post("https://blogsite-208j.onrender.com/user/deleteuser", { username })
+    api
+      .post("/user/deleteuser", { username })
       .then((res) => {
         alert("user delte sucessfully");
         console.log("response from", res);
@@ -136,14 +127,8 @@ const Superadmin = () => {
   };
 
   const blockuser = (username) => {
-    axios
-      .post(
-        "https://blogsite-208j.onrender.com/user/userblock",
-        { username },
-        {
-          headers: { Authorization: `bearer ${token} ` },
-        }
-      )
+    api
+      .post("/user/userblock", { username })
       .then((res) => {
         const updatedUsers = user.map((u) =>
           u.username === username
@@ -286,8 +271,8 @@ const Superadmin = () => {
                       <div className="inner-card">
                         <Link to={`/layout/specificblog/${blog._id}`}>
                           <img
-                            src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
-                            alt="there is a image"
+                            src={`${API_BASE_URL}/uploads/${blog.image}`}
+                            alt=""
                           />
                           <div className="card-content ">
                             <p>{blog.category}</p>

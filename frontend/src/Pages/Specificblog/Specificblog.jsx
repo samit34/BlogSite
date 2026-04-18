@@ -4,9 +4,9 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api, { API_BASE_URL } from '../../api/client';
 import DOMPurify from 'dompurify';
 import { AiFillLike } from "react-icons/ai";
 import { FaBookmark } from "react-icons/fa";
@@ -14,28 +14,35 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/footer/Footer';
 import './Specificblog.css';
 import { useBlog } from '../Blogcontext';
+import { ScrollReveal, ScrollRevealWide } from '../../Components/motion/ScrollReveal';
+import { useToast } from '../../Components/Toast/ToastProvider';
+import { addToWishlistWithToast } from '../../utils/wishlistNotify';
 
 const Specificblog = () => {
   const { handleLike, blog } = useBlog();
+  const { showToast } = useToast();
   const { id } = useParams();
   const [sblog, setBlog] = useState(null);
   const [error, setError] = useState(null);
-  const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  const oneblog = useCallback(async () => {
+    try {
+      const res = await api.post(`/user/specificblog/${id}`);
+      setBlog(res.data[0]);
+      setError(null);
+    } catch (err) {
+      const msg =
+        err.response?.data?.message ||
+        "Failed to fetch blog. Please try again.";
+      setError(msg);
+      setBlog(null);
+    }
+  }, [id]);
 
   useEffect(() => {
     oneblog();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  }, [id]);
-
-  const oneblog = async () => {
-    try {
-      const res = await axios.post(`https://blogsite-208j.onrender.com/user/specificblog/${id}`);
-      setBlog(res.data[0]);
-    } catch (err) {
-      setError("Failed to fetch blog. Please try again.");
-    }
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [oneblog]);
 
   const runagain = async () => {
     if (sblog) {
@@ -44,17 +51,8 @@ const Specificblog = () => {
     }
   };
 
-  const wishlist = async (id) => {
-    // setWishlistLoading(true);
-    const token = localStorage.getItem("token");
-    try {
-      await axios.post('https://blogsite-208j.onrender.com/user/wishlist', { id }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert("Card added successfully");
-    } catch (err) {
-      alert("Card already added");
-    } 
+  const wishlist = (id) => {
+    addToWishlistWithToast(api, id, showToast);
   };
 
  
@@ -64,11 +62,14 @@ const Specificblog = () => {
 
       <Navbar />
       <div className="container">
-        <h1 className="text-center">This is a specific blog</h1>
+        <ScrollReveal>
+          <h1 className="text-center">This is a specific blog</h1>
+        </ScrollReveal>
 
         {error && <p className="error">{error}</p>}
 
         {sblog ? (
+          <ScrollRevealWide>
           <div className="specific-container">
             <div
               className="card-heading"
@@ -78,8 +79,8 @@ const Specificblog = () => {
             ></div>
 
             <img
-              src={`https://blogsite-208j.onrender.com/uploads/${sblog.image}`}
-              alt={sblog.heading || "Blog Image"}
+              src={`${API_BASE_URL}/uploads/${sblog.image}`}
+              alt=""
             />
             <p
               dangerouslySetInnerHTML={{
@@ -96,6 +97,7 @@ const Specificblog = () => {
               <p>Posted on {new Date(parseInt(sblog.date)).toLocaleDateString()}</p>
             </div>
           </div>
+          </ScrollRevealWide>
         ) : (
           <p>Loading blog...</p>
         )}
@@ -103,15 +105,19 @@ const Specificblog = () => {
         <div className="col-md-12 blog-inner-container">
           {blog.length > 0 ? (
             blog.slice(3,6 ).map((b, index) => (
-              <div key={index} className="cards col-md-4 text-black text">
+              <ScrollReveal
+                key={b._id || index}
+                className="cards col-md-4 text-black text"
+                delay={Math.min(index * 0.08, 0.4)}
+              >
                 <div className="inner-card">
                   <Link onClick={() => wishlist(b._id)}>
                     <FaBookmark className="bookmark-icon" />
                   </Link>
                   <Link to={`/layout/specificblog/${b._id}`}>
                     <img
-                      src={`https://blogsite-208j.onrender.com/uploads/${b.image}`}
-                      alt="Blog Image"
+                      src={`${API_BASE_URL}/uploads/${b.image}`}
+                      alt=""
                     />
                     <div
                       className="card-heading"
@@ -131,7 +137,7 @@ const Specificblog = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))
           ) : (
             <p>There is no data</p>

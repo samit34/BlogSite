@@ -1,4 +1,10 @@
-import React, { useState, createContext, useContext, useEffect } from "react";
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -10,20 +16,18 @@ const AuthContext = ({ children }) => {
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
-  const login = () => {
-    // localStorage.setItem("token", "dummy_token");
+  const login = useCallback(() => {
     console.log("the login funcation trigger");
     setAuth(true);
-
     navigate("/");
-  };
+  }, [navigate]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     console.log("the logout funcation is running");
     localStorage.removeItem("token");
     setAuth(false);
     navigate("/");
-  };
+  }, [navigate]);
 
   useEffect(() => {
     const checkTokenExpiration = () => {

@@ -55,6 +55,7 @@ liked: {
 
 
 
-const category = mongoose.model('blogcontent ', userSchema);
-
-module.exports = category;
+/**
+ * Collection name must match Atlas exactly. Legacy app used a trailing space → collection is "blogcontent " not "blogcontent".
+ */
+module.exports = mongoose.model("BlogContent", userSchema, "blogcontent ");

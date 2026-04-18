@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { FaEye } from "react-icons/fa";
-import axios from "axios";
+import api from "../../api/client";
 import { useAuth } from "../Authcontext";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaUserAlt } from "react-icons/fa";
-import { SiStudyverse } from "react-icons/si";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -28,7 +26,7 @@ const Login = () => {
     };
 
     try {
-      const res = await axios.post("https://blogsite-208j.onrender.com/user/login", data); // Changed to POST
+      const res = await api.post("/user/login", data);
       console.log("Login response:", res.data.token);
 
       const newToken = res.data.token;

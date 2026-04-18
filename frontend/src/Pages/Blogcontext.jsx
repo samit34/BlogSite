@@ -1,44 +1,35 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-
-import { useAuth } from "./Authcontext";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import api from "../api/client";
+import listFromResponse from "../api/listFromResponse";
 
 const BlogContext = createContext();
 
 const BlogContextProvider = ({ children }) => {
-  // console.log("blogcontext")
-
-  const { logout } = useAuth();
   const [blog, setBlog] = useState([]);
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     try {
-      const res = await axios.get("https://blogsite-208j.onrender.com/user/showblog");
-
-      setBlog(res.data);
+      const res = await api.get("/user/showblog");
+      setBlog(listFromResponse(res));
     } catch (err) {
       console.log("err is here", err);
-      if (err.response.data === "Token not found" || "Invalid token") {
+      if (err.response?.data === "Token not found" || err.response?.data === "Invalid token") {
         console.log("if is running");
       }
     }
-  };
+  }, []);
 
   // Handle like functionality
   const handleLike = async (id) => {
     console.log("hanmdle funcation is running ", id);
-    const token = localStorage.getItem("token");
-
     try {
-      const res = await axios.post(
-        "https://blogsite-208j.onrender.com/user/like",
-        { id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await api.post("/user/like", { id });
 
       // Update blogs with the new like status
       const updatedBlogs = blog.map((b) =>
@@ -54,25 +45,15 @@ const BlogContextProvider = ({ children }) => {
   // Handle wishlist functionality
   const handleWishlist = async (id) => {
     console.log("This is the blog ID for wishlist:", id);
-    const token = localStorage.getItem("token");
-
     try {
-      await axios.post(
-        "https://blogsite-208j.onrender.com/user/wishlist",
-        { id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await api.post("/user/wishlist", { id });
     } catch (err) {}
   };
 
   // Fetch blogs on component mount
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   return (
     <BlogContext.Provider

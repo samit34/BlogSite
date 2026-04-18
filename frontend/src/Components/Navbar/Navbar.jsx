@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { FaFacebookF } from "react-icons/fa";
-import axios, { CancelToken } from "axios";
+import api from "../../api/client";
+import listFromResponse from "../../api/listFromResponse";
 
 import "./navbar.css";
 import { Link } from "react-router-dom";
@@ -46,10 +47,10 @@ const Navbar = ({ setSerach, serach }) => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://blogsite-208j.onrender.com/user/homecategory")
+    api
+      .get("/user/homecategory")
       .then((res) => {
-        setHomecat(res.data);
+        setHomecat(listFromResponse(res));
       })
       .catch((err) => {
         console.log("this is a err in navbar", err);
@@ -177,13 +178,13 @@ const Navbar = ({ setSerach, serach }) => {
                       Blogs{" "}
                     </Link>
                     <select
-                      className="form-select m-0 p-0 "
+                      className="form-select   m-0 p-0 overflow-auto h-3 w-4 bg-red "
                       aria-label="Default select example"
                       onClick={(e) => val(e.target.value)}
                     >
-                      <option value={""}>All</option>
+                      <option value={""}  className="px-4">All</option>
                       {homecat.map((cat, index) => (
-                        <option key={index} value={cat.category}>
+                        <option key={index} className="px-4" value={cat.category}>
                           {" "}
                           {cat.category}
                         </option>

@@ -1,9 +1,11 @@
 import React from "react";
-import "./Footer.css"; 
+import "./Footer.css";
 import { Link } from "react-router-dom";
+import { ScrollRevealWide } from "../motion/ScrollReveal";
 
 const Footer = () => {
   return (
+    <ScrollRevealWide>
     <section className="section-seventeen  ">
       <div className="inner-seventeen ">
         <footer>
@@ -66,6 +68,7 @@ const Footer = () => {
         </footer>
       </div>
     </section>
+    </ScrollRevealWide>
   );
 };
 

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api, { API_BASE_URL } from "../../api/client";
 import DOMPurify from "dompurify";
 
 import { FaCamera } from "react-icons/fa";
-import { useBlog } from "../Blogcontext";
 import "./Account.css";
-import coverImage from "../../images/cover-image.jpg";
 
 const AccountPage = () => {
   const [articles, setArticles] = useState([]); // Articles state
@@ -14,30 +12,45 @@ const AccountPage = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [username, setUsername] = useState(""); // Username
   const [profilePic, setProfilePic] = useState(""); // Profile picture URL
-  const { handleLike } = useBlog();
+  const [accountNotice, setAccountNotice] = useState(null);
 
-  // Fetch account data and profile picture
   useEffect(() => {
     fetchAccountData();
-    handlePhotoChange();
+  }, []);
+
+  useEffect(() => {
+    api
+      .post("/user/photo", {})
+      .then((res) => {
+        if (res.status === 200 && res.data.photo) {
+          setProfilePic(res.data.photo);
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching profile photo:", err);
+      });
   }, []);
 
   const fetchAccountData = () => {
-    const token = localStorage.getItem("token");
-
-    axios
-      .post(
-        "https://blogsite-208j.onrender.com/user/account",
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    api
+      .post("/user/account", {})
       .then((res) => {
-        if (res.data.account) {
-          setArticles(res.data.account);
-          setUsername(res.data.user);
+        const { account, user, success, message } = res.data;
+        if (success === false) {
+          setArticles([]);
+          setUsername(user || "");
+          setAccountNotice(message || "No posts found for this account");
+          setError(null);
+          setLoading(false);
+          return;
+        }
+        setAccountNotice(null);
+        if (account?.length) {
+          setArticles(account);
+          setUsername(user);
+          setError(null);
         } else {
+          setArticles([]);
           setError("No articles found.");
         }
         setLoading(false);
@@ -49,52 +62,17 @@ const AccountPage = () => {
   };
 
   const handlePhotoChange = (e) => {
-    console.log("account");
-
-    const token = localStorage.getItem("token");
-
-    // If no file is selected, fetch the user's current photo
-    if (!e || !e.target.files || e.target.files.length === 0) {
-      console.log("No file selected. Fetching user profile photo...");
-
-      axios
-        .post(
-          "https://blogsite-208j.onrender.com/user/photo",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200 && res.data.photo) {
-            console.log("this is a repone in before photo", res);
-            setProfilePic(res.data.photo);
-
-            console.log("this is a ", profilePic);
-          } else {
-            console.log("User photo not found, showing user data:", res.data);
-          }
-        })
-        .catch((err) => {
-          console.log("Error fetching profile photo:", err);
-        });
+    if (!e?.target?.files?.length) {
       return;
     }
 
-    // If a file is selected, upload the photo
+    // Upload selected file
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("photo", file);
 
-    axios
-      .post("https://blogsite-208j.onrender.com/user/photo", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    api
+      .post("/user/photo", formData)
       .then((res) => {
         console.log("this is a response in a photo in set photo", res);
         if (res.status === 200 && res.data.photo) {
@@ -123,8 +101,8 @@ const AccountPage = () => {
   const deletecard = (id) => {
     console.log("this is a id in deletecard", id);
 
-    axios
-      .post("https://blogsite-208j.onrender.com/user/card", { id })
+    api
+      .post("/user/card", { id })
       .then((res) => {
         console.log("there is a  responsse of deletecard ", res);
         fetchAccountData();
@@ -138,12 +116,14 @@ const AccountPage = () => {
     <>
       <div className="account-page">
         <div className="container" style={{ padding: "auto" }}>
-          {/* <div className="profile-cover"><img src={coverImage} /></div> */}
+          {accountNotice && (
+            <p className="text-muted text-center mb-2">{accountNotice}</p>
+          )}
           <div className="profile-main">
             <div className="photo ">
               <div className="profile-pic-container">
                 <img
-                  src={`https://blogsite-208j.onrender.com/uploads/${profilePic}`}
+                  src={`${API_BASE_URL}/uploads/${profilePic}`}
                   alt="Profile"
                   className="profile-pic"
                 />
@@ -200,8 +180,8 @@ const AccountPage = () => {
                     <div className="inner-card">
                       <Link to={`/layout/specificblog/${blog._id}`}>
                         <img
-                          src={`https://blogsite-208j.onrender.com/uploads/${blog.image}`}
-                          alt="there is a image"
+                          src={`${API_BASE_URL}/uploads/${blog.image}`}
+                          alt=""
                         />
                         <div className="card-content ">
                           <p>{blog.category}</p>

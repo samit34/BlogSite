@@ -1,6 +1,7 @@
 const { generateToken } = require('../middleware/jwtAuth');
 const User = require('../model/userschema');
 const bcrypt = require("bcrypt");
+const { sendList, notFound } = require("../utils/apiResponse");
 
 const blogcategory = require('../model/category');
 const blogcontent = require("../model/blogcontentschema");
@@ -129,17 +130,17 @@ const userupload = async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const newblogcontent = blogcontent({
+    const newblogcontent = new blogcontent({
       image,
       heading,
       content,
       category,
       username,
-      userid,
+      userid: String(userid),
       date,
-      eyecatch
-    })
-    newblogcontent.save();
+      eyecatch,
+    });
+    await newblogcontent.save();
 
 
     res.status(200).json({ message: "Data uploaded successfully", data: { heading, content, image, category } });
@@ -176,48 +177,33 @@ const category = async (req, res) => {
 
 
 const showcategories = async (req, res) => {
-  const decode = req.decode
-  // console.log(decode);
-
   try {
     const categories = await blogcategory.find();
-    res.status(200).json(categories);
-
-    // console.log("the showcategories funcation is running");
+    return sendList(res, categories, "No categories found");
   } catch (err) {
-    
-    res.status(500).json({ message: 'Failed to fetch categories', error: err.message });
+    res.status(500).json({ message: "Failed to fetch categories", error: err.message });
   }
-
-}
+};
 
 
 const showuser = async (req, res) => {
   try {
-    const show = await User.find()
-
-
-
-    res.status(200).json(show);
-
-
-
+    const show = await User.find();
+    return sendList(res, show, "No users found");
   } catch (error) {
-
+    res.status(500).json({ message: "Failed to fetch users", error: error.message });
   }
-}
+};
 
 
 const homecat = async (req, res) => {
   try {
-    const cat = await blogcategory.find()
-
-    res.status(200).json(cat);
+    const cat = await blogcategory.find();
+    return sendList(res, cat, "No categories found");
   } catch (error) {
- 
-    // res.status(500).json(error);
+    res.status(500).json({ message: "Failed to fetch categories", error: error.message });
   }
-}
+};
 
 
 const deletecat = async (req, res) => {
@@ -226,33 +212,26 @@ const deletecat = async (req, res) => {
 
   try {
 
-    const del = cat
-    console.log("this is a del", del)
-    await blogcategory.deleteOne({ category: del });
-
+    const del = cat;
+    console.log("this is a del", del);
+    const result = await blogcategory.deleteOne({ category: del });
+    if (result.deletedCount === 0) {
+      return notFound(res, "Category not found");
+    }
     res.status(200).json({ message: "category delete succesfully" });
-
   } catch (error) {
     res.status(500).json({ message: " fail to delete category" });
   }
-}
+};
 
 const showblog = async (req, res) => {
-
   try {
     const blog = await blogcontent.find({});
-    // console.log(blog)
-    res.status(200).json(blog)
-
-
+    return sendList(res, blog, "No blogs found");
   } catch (err) {
-
-    //  res.status(500).json({err : "fail to send data"})
-    res.status(500).json({ message: 'Failed to fetch categories', error: err.message });
-
+    res.status(500).json({ message: "Failed to fetch blogs", error: err.message });
   }
-
-}
+};
 const like = async (req, res) => {
   const userid = req.user.userid
   // console.log("userid", userid)
@@ -260,7 +239,10 @@ const like = async (req, res) => {
   // console.log("id", blogid)
 
   try {
-    const blog = await blogcontent.findById(blogid)
+    const blog = await blogcontent.findById(blogid);
+    if (!blog) {
+      return notFound(res, "Blog not found");
+    }
 
     if (blog.liked.includes(userid)) {
       console.log("its already like", blog)
@@ -283,22 +265,19 @@ const like = async (req, res) => {
   }}
 
 
-const specificblog = async(req , res)=>{
-   
-  const id = req.params.id
-// console.log("this is a id",id)
+const specificblog = async (req, res) => {
+  const id = req.params.id;
 
-    try {
-      const specificblog = await blogcontent.find({_id:id})
-        
-      // console.log("this is a specific blog" , specificblog)
-       await res.status(200).json(specificblog)
-    } catch (error) {
-      //  console.log("specificblog err" ,  error)
-       res.status(500).json({message: "this is err" , error})
-
+  try {
+    const rows = await blogcontent.find({ _id: id });
+    if (!rows.length) {
+      return notFound(res, "Blog not found");
     }
-}
+    return res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch blog", error: error.message });
+  }
+};
 
 //  const wishlist = async(req , res)=>{
   
@@ -368,27 +347,26 @@ const wishlist = async (req, res) => {
 
 
 const wishpage = async (req, res) => {
-  const  user =  await  req.user.username;
-    // console.log("this is a user " , user)
-    try {
-      
-      const wishes = await wish.find({ username: user });
-    
-      const wishIds = wishes.map(wish => wish.id); 
-      console.log("This is the wishlist IDs:", wishIds);
-  
-      
-      const blogs = await blogcontent.find({ _id: { $in: wishIds } });
-      
-
-    
-      // Return the blog content as the response
-      res.status(200).json(blogs);
-  
-    } catch (error) {
-      console.error("Error fetching wishlist and blog content:", error);
-      res.status(500).json({ message: "Server error occurred while fetching wishlist and blog content." });
+  const user = req.user.username;
+  try {
+    const wishes = await wish.find({ username: user });
+    if (!wishes.length) {
+      return sendList(res, [], "Your wishlist is empty");
     }
+
+    const wishIds = wishes.map((w) => w.id);
+    console.log("This is the wishlist IDs:", wishIds);
+
+    const blogs = await blogcontent.find({ _id: { $in: wishIds } });
+    return sendList(
+      res,
+      blogs,
+      "Saved wishlist items could not be loaded (blogs may have been removed)"
+    );
+  } catch (error) {
+    console.error("Error fetching wishlist and blog content:", error);
+    res.status(500).json({ message: "Server error occurred while fetching wishlist and blog content." });
+  }
 };
 
 
@@ -414,25 +392,31 @@ const deletecard = async(req ,res)=>{
 }
 
 
-const account = async (req,res)=>{
-  const user = req.user.username 
-  
+const account = async (req, res) => {
+  const user = req.user.username;
+
   try {
-   const  account = await blogcontent.find({ username : user});      
-      
+    const account = await blogcontent.find({ username: user });
+    if (!account.length) {
+      return res.status(200).json({
+        success: false,
+        message: "No posts found for this account",
+        account: [],
+        user,
+      });
+    }
 
-    res.status(200).json({ message :"data send to account properly" , account , user})
-      
-
+    res.status(200).json({
+      success: true,
+      message: "data send to account properly",
+      account,
+      user,
+    });
   } catch (error) {
-    
-    console.log("there is a error in account api" , error)
-
+    console.log("there is a error in account api", error);
+    res.status(500).json({ message: "Failed to load account", error: error.message });
   }
- 
-
-
-}
+};
    
 
 
@@ -479,22 +463,20 @@ const profilepic = async (req, res) => {
 
 
 
-const card = async (req,res)=>{
-    const {id} = req.body
-    
-    try {
-   
-      await blogcontent.findByIdAndDelete({ _id: id });
+const card = async (req, res) => {
+  const { id } = req.body;
 
-       
-      await   res.status(200).json({message : "card is delete"})
-       
-
-    } catch (error) {
-     await   res.status(500).json({message: "there is a err in delete funcation"})
+  try {
+    const deleted = await blogcontent.findByIdAndDelete(id);
+    if (!deleted) {
+      return notFound(res, "Blog not found");
     }
+    return res.status(200).json({ message: "card is delete" });
+  } catch (error) {
+    return res.status(500).json({ message: "there is a err in delete funcation" });
+  }
+};
 
-}
 
 
 
@@ -508,7 +490,9 @@ if(!username){
 
 console.log("this is a name in delete user" , username)
   const userinfo = await User.deleteOne({username : username})
-
+  if (userinfo.deletedCount === 0) {
+    return notFound(res, "User not found");
+  }
   res.json({message:"user deleted" , userinfo})
  
 

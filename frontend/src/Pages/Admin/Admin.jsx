@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
+import api from '../../api/client';
+import listFromResponse from '../../api/listFromResponse';
 import './Admin.css';
 
 
@@ -25,15 +26,10 @@ const Admin = () => {
     // Fetch categories from the database
     useEffect(() => {
 
-        const token = localStorage.getItem('token');
-        axios
-            .get('https://blogsite-208j.onrender.com/user/showcategories', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }) // Endpoint to fetch categories   
+        api
+            .get('/user/showcategories')
             .then((res) => {
-                setCategories(res.data);
+                setCategories(listFromResponse(res));
                 console.log("the useeffect is getting the response");
 
             })
@@ -62,26 +58,13 @@ const Admin = () => {
 
 
 
-        const token = localStorage.getItem('token');
-
-        axios
-            .post('https://blogsite-208j.onrender.com/user/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`,
-                }
-            })
+        api
+            .post('/user/upload', formData)
             .then((res) => {
                 console.log(res)
                 window.location.reload();
             })
             .catch((err) => console.log(err));
-    };
-
-    const headingModules = {
-        toolbar: [
-            [{ 'bold': true }] // Only allow bold formatting
-        ],
     };
 
     const modules = {
@@ -203,13 +186,13 @@ const Admin = () => {
                         <ul className="dropdown-menu">
                             {categories.map((cat, index) => (
                                 <li key={index}>
-                                    <a
+                                    <button
+                                        type="button"
                                         className="dropdown-item"
                                         onClick={handleCategorySelect}
-
                                     >
                                         {cat.category}
-                                    </a>
+                                    </button>
                                 </li>
                             ))}
                         </ul>
