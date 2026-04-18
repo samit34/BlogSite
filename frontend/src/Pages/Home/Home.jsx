@@ -27,8 +27,6 @@ import {
   ScrollReveal,
   ScrollRevealWide,
 } from "../../Components/motion/ScrollReveal";
-import { useToast } from "../../Components/Toast/ToastProvider";
-import { addToWishlistWithToast } from "../../utils/wishlistNotify";
 
 const Home = React.memo(() => {
   const serachref = useRef();
@@ -36,7 +34,6 @@ const Home = React.memo(() => {
   const [serach, setSerach] = useState("");
   const token = localStorage.getItem("token");
   const { logout } = useAuth();
-  const { showToast } = useToast();
 
   const val = (id) => {
     setSerach(id);
@@ -67,7 +64,14 @@ const Home = React.memo(() => {
   }, [fetchBlogs]);
 
   const wishlist = (id) => {
-    addToWishlistWithToast(api, id, showToast);
+    api
+      .post("/user/wishlist", { id })
+      .then((res) => {
+        alert("Card added succesfully");
+      })
+      .catch((err) => {
+        alert("card already added");
+      });
   };
 
   // const shuffleArray = (array) => {

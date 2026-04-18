@@ -15,12 +15,9 @@ import Footer from '../../Components/footer/Footer';
 import './Specificblog.css';
 import { useBlog } from '../Blogcontext';
 import { ScrollReveal, ScrollRevealWide } from '../../Components/motion/ScrollReveal';
-import { useToast } from '../../Components/Toast/ToastProvider';
-import { addToWishlistWithToast } from '../../utils/wishlistNotify';
 
 const Specificblog = () => {
   const { handleLike, blog } = useBlog();
-  const { showToast } = useToast();
   const { id } = useParams();
   const [sblog, setBlog] = useState(null);
   const [error, setError] = useState(null);
@@ -51,8 +48,14 @@ const Specificblog = () => {
     }
   };
 
-  const wishlist = (id) => {
-    addToWishlistWithToast(api, id, showToast);
+  const wishlist = async (id) => {
+    // setWishlistLoading(true);
+    try {
+      await api.post('/user/wishlist', { id });
+      alert("Card added successfully");
+    } catch (err) {
+      alert("Card already added");
+    } 
   };
 
  

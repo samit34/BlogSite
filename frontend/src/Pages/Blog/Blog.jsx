@@ -12,12 +12,9 @@ import { FaAngleRight } from "react-icons/fa";
 
 import { FaBookmark } from "react-icons/fa";
 import { ScrollReveal } from "../../Components/motion/ScrollReveal";
-import { useToast } from "../../Components/Toast/ToastProvider";
-import { addToWishlistWithToast } from "../../utils/wishlistNotify";
 
 const Blog = ({ serach }) => {
   const { fetchBlogs, handleLike, blog } = useBlog();
-  const { showToast } = useToast();
 
   const [counting, setCounting] = useState(0);
   const [pages, setPages] = useState(1);
@@ -42,7 +39,16 @@ const Blog = ({ serach }) => {
   }, [blog]);
 
   const wishlist = (id) => {
-    addToWishlistWithToast(api, id, showToast);
+    api
+      .post("/user/wishlist", { id })
+      .then((res) => {
+        alert("Card added succesfully");
+        // console.log("this is  response of wishlist ", res);
+      })
+      .catch((err) => {
+        alert("card already added");
+        // console.log("this is a err of wishlis", err)
+      });
   };
   const filterblog = blog.filter((b) => {
     if (!b) return true;

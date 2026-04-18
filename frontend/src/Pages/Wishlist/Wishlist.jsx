@@ -8,12 +8,9 @@ import { AiFillLike } from "react-icons/ai";
 import { useBlog } from "../Blogcontext";
 
 import { FaBookmark } from "react-icons/fa";
-import { useToast } from "../../Components/Toast/ToastProvider";
-import { removeFromWishlistWithToast } from "../../utils/wishlistNotify";
 
 const Wishlist = ({ serach }) => {
   const { handleLike } = useBlog();
-  const { showToast } = useToast();
   const [wishblog, setWishblog] = useState([]);
 
   const fetchWishlist = async () => {
@@ -75,14 +72,10 @@ const Wishlist = ({ serach }) => {
               return (
                 <div key={index} className=" cards  col-md-4 text-black text">
                   <div className="inner-card">
-                    <button
-                      type="button"
-                      className="wishlist-remove"
-                      onClick={() => deletewish(blog._id)}
-                      aria-label="Remove from wishlist"
-                    >
-                      <FaBookmark className="bookmark-icon" />
-                    </button>
+                    <Link className="" onClick={() => deletewish(blog._id)}>
+                      {" "}
+                      <FaBookmark className="bookmark-icon" />{" "}
+                    </Link>
                     <Link to={`/layout/specificblog/${blog._id}`}>
                       <img
                         src={`${API_BASE_URL}/uploads/${blog.image}`}
