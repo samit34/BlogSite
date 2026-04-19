@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true, // Ensures unique emails
   },
+
+  phone: {
+    type: String,
+    trim: true,
+  },
   
   photo: {
     type: String,
@@ -24,7 +29,8 @@ const userSchema = new mongoose.Schema({
   },
 
 
-  status: { type: String, enum: ['active', 'blocked'], default: 'active' },
+  /** Legacy DB values may use "block"; prefer "blocked" for new records */
+  status: { type: String, enum: ['active', 'blocked', 'block'], default: 'active' },
 
   role:{
     type: String,

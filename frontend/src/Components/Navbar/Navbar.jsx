@@ -6,12 +6,11 @@ import api from "../../api/client";
 import listFromResponse from "../../api/listFromResponse";
 
 import "./navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { FaInstagram } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 
-// import { FaFacebookF } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { VscAccount } from "react-icons/vsc";
@@ -26,9 +25,8 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
   const blogsRef = useRef();
   const aboutRef = useRef();
   const [homecat, setHomecat] = useState([]);
-  const { logout } = useAuth();
-
-  const token = localStorage.getItem("token");
+  const { logout, isauth } = useAuth();
+  const navigate = useNavigate();
 
   const categoryOptions = homecat.map((c) => c.category).filter(Boolean);
   const selectedCategory =
@@ -65,157 +63,206 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
   }, []);
 
   return (
-    <>
-      <nav>
-        <div
-          class="offcanvas offcanvas-start"
-          tabindex="-1"
-          id="offcanvasExample"
-          aria-labelledby="offcanvasExampleLabel"
-        >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title text-white " id="offcanvasExampleLabel ">
-              Offcanvas
-            </h5>
-            <button
-              type="button"
-              class="btn-close  bg-white text-white"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
+    <nav className="navbar-chronic" aria-label="Main">
+      <div
+        className="offcanvas offcanvas-start"
+        tabIndex={-1}
+        id="offcanvasExample"
+        aria-labelledby="offcanvasExampleLabel"
+      >
+        <div className="offcanvas-header navbar-chronic__drawer-header">
+          <div>
+            <p className="navbar-chronic__drawer-kicker">Chronic</p>
+            <h2
+              className="offcanvas-title text-white h5 mb-0"
+              id="offcanvasExampleLabel"
+            >
+              Menu
+            </h2>
           </div>
-          <div class="offcanvas-body">
-            {/* <div>
-      Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
-    </div> */}
-            <div className="col-12 slide-bar ">
-              <div className="slid-com  col-10">
-                <Link to={"/layout/account"}> Account </Link>
-                <Link to={"/layout/blog"}> Blogs</Link>
-                <Link to={"/layout/wishlist"}> Wishlist</Link>
-                {token ? (
-                  <Link onClick={() => logout()}> Logout</Link>
-                ) : (
-                  <Link onClick={() => logout()}> Login</Link>
-                )}
-                <Link to={"/layout/admin"}> Post Blog</Link>
-              </div>
+          <button
+            type="button"
+            className="btn-close btn-close-white"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          />
+        </div>
+        <div className="offcanvas-body navbar-chronic__drawer-body">
+          <div className="col-12 slide-bar">
+            <div className="slid-com col-10">
+              <Link className="navbar-chronic__drawer-link" to="/layout/account">
+                Account
+              </Link>
+              <Link className="navbar-chronic__drawer-link" to="/layout/blog">
+                Blogs
+              </Link>
+              <Link className="navbar-chronic__drawer-link" to="/layout/wishlist">
+                Wishlist
+              </Link>
+              <Link className="navbar-chronic__drawer-link" to="/layout/about">
+                About
+              </Link>
+              <Link className="navbar-chronic__drawer-link" to="/layout/contact">
+                Contact
+              </Link>
+              {isauth ? (
+                <button
+                  type="button"
+                  className="sidebar-auth-btn"
+                  data-bs-dismiss="offcanvas"
+                  onClick={() => logout()}
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="sidebar-auth-btn"
+                  data-bs-dismiss="offcanvas"
+                  aria-label="Sign in"
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </button>
+              )}
+              <Link className="navbar-chronic__drawer-link" to="/layout/admin">
+                Post Blog
+              </Link>
             </div>
           </div>
         </div>
-        <div className="nav-main-con">
-          <div className="inner-main-container">
-            <div className="container nav-container">
-              <div className="nav-heading-inner">
-                <div className="row">
-                  <div className="col-md-4 nav-social-icon">
-                    <FaInstagram />
-                    <FaFacebookF />
-                    <FaYoutube />
-                    <FaXTwitter />
-                  </div>
+      </div>
 
-                  <div className=" col-md-4 nav-heading">
-                    <h1>CHRONIC</h1>
-                    <p>Blogs and & Magzine</p>
-                  </div>
+      <div className="nav-main-con">
+        <div className="inner-main-container">
+          <div className="container nav-container">
+            <div className="nav-heading-inner">
+              <div className="row align-items-center">
+                <div className="col-md-4 nav-social-icon">
+                  <FaInstagram aria-hidden />
+                  <FaFacebookF aria-hidden />
+                  <FaYoutube aria-hidden />
+                  <FaXTwitter aria-hidden />
+                </div>
 
-                  <div className=" col-md-4 nav-account-whislist">
-                    <Link to={"/layout/account"}>
-                      {" "}
-                      <VscAccount />{" "}
-                    </Link>
-                    <Link to={"/layout/wishlist"}>
-                      {" "}
-                      <PiHandbagLight />
-                    </Link>
-                  </div>
+                <div className="col-md-4 nav-heading">
+                  <h1>CHRONIC</h1>
+                  <p>Blogs &amp; magazine</p>
+                </div>
+
+                <div className="col-md-4 nav-account-whislist">
+                  <Link
+                    to="/layout/account"
+                    className="navbar-chronic__icon-link"
+                    aria-label="Account"
+                  >
+                    <VscAccount aria-hidden />
+                  </Link>
+                  <Link
+                    to="/layout/wishlist"
+                    className="navbar-chronic__icon-link"
+                    aria-label="Wishlist"
+                  >
+                    <PiHandbagLight aria-hidden />
+                  </Link>
                 </div>
               </div>
+            </div>
 
-              <div className="nav-com">
-                <div className="nav-inner-com row">
-                  <div className="col-md-2 col-6 m-0">
-                    <Link>
-                      <HiBars3BottomLeft
-                        className="nav-bars  btn btn-primary "
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasExample"
-                        aria-controls="offcanvasExample"
-                      />{" "}
-                    </Link>
-                  </div>
+            <div className="nav-com">
+              <div className="nav-inner-com row align-items-center">
+                <div className="col-md-2 col-6 m-0">
+                  <button
+                    type="button"
+                    className="navbar-chronic__menu-btn"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample"
+                    aria-controls="offcanvasExample"
+                    aria-label="Open menu"
+                  >
+                    <HiBars3BottomLeft className="nav-bars" aria-hidden />
+                  </button>
+                </div>
 
-                  <div className="col-md-8 m-0 nav-com-smaller ">
-                    <Link
-                      to={"/"}
-                      className=" com "
-                      ref={homeRef}
-                      onClick={() => showcom(homeRef)}
+                <div className="col-md-8 m-0 nav-com-smaller">
+                  <Link
+                    to="/"
+                    className="navbar-chronic__link"
+                    ref={homeRef}
+                    onClick={() => showcom(homeRef)}
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/layout/contact"
+                    className="navbar-chronic__link"
+                    ref={contactRef}
+                    onClick={() => showcom(contactRef)}
+                  >
+                    Contact
+                  </Link>
+                  <Link
+                    to="/layout/about"
+                    className="navbar-chronic__link"
+                    ref={aboutRef}
+                    onClick={() => showcom(aboutRef)}
+                  >
+                    About
+                  </Link>
+                  <Link
+                    to="/layout/blog"
+                    className="navbar-chronic__link"
+                    ref={blogsRef}
+                    onClick={() => showcom(blogsRef)}
+                  >
+                    Blogs
+                  </Link>
+                  <select
+                    className="nav-category-select"
+                    aria-label="Filter by category"
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                  >
+                    <option value="">All</option>
+                    {homecat.map((cat, index) => (
+                      <option
+                        key={cat._id || cat.category || index}
+                        value={cat.category}
+                      >
+                        {cat.category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="serach-div col-md-2 col-6 m-0">
+                  <button
+                    type="button"
+                    className="navbar-chronic__search-btn"
+                    onClick={() => showserach()}
+                    aria-label="Open search"
+                  >
+                    <CiSearch className="serach" aria-hidden />
+                  </button>
+                </div>
+                <div className="show-serach" ref={serachref} role="search">
+                  <label htmlFor="layout-nav-search" className="navbar-chronic__search-label">
+                    Search
+                  </label>
+                  <input
+                    id="layout-nav-search"
+                    type="search"
+                    className="serach-input"
+                    placeholder="Search…"
+                    value={serach}
+                    onChange={(e) => setSerach(e.target.value)}
+                  />
+                  <div className="navbar-chronic__search-actions">
+                    <button
+                      type="button"
+                      className="serach-btn serach-btn--primary"
+                      onClick={() => showserach()}
                     >
-                      {" "}
-                      HOME{" "}
-                    </Link>
-                    <Link
-                      to={"/layout/contact"}
-                      className=" com "
-                      ref={contactRef}
-                      onClick={() => showcom(contactRef)}
-                    >
-                      {" "}
-                      CONTACT{" "}
-                    </Link>
-                    <Link
-                      to={"/layout/about"}
-                      className=" com "
-                      ref={aboutRef}
-                      onClick={() => showcom(aboutRef)}
-                    >
-                      {" "}
-                      ABOUT{" "}
-                    </Link>
-                    <Link
-                      to={"/layout/blog"}
-                      className=" com "
-                      ref={blogsRef}
-                      onClick={() => showcom(blogsRef)}
-                    >
-                      {" "}
-                      Blogs{" "}
-                    </Link>
-                    <select
-                      className="nav-category-select"
-                      aria-label="Filter by category"
-                      value={selectedCategory}
-                      onChange={handleCategoryChange}
-                    >
-                      <option value="">All</option>
-                      {homecat.map((cat, index) => (
-                        <option key={cat._id || cat.category || index} value={cat.category}>
-                          {cat.category}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className=" serach-div col-md-2 col-6 m-0 ">
-                    <Link>
-                      <CiSearch
-                        className="serach text-black"
-                        onClick={() => showserach()}
-                      />
-                    </Link>
-                  </div>
-                  <div className="show-serach" ref={serachref}>
-                    <input
-                      type="text"
-                      className="serach-input"
-                      placeholder="Serach"
-                      value={serach}
-                      onChange={(e) => setSerach(e.target.value)}
-                    />
-                    <button className="serach-btn" onClick={() => showserach()}>
-                      Serach
+                      Done
                     </button>
                   </div>
                 </div>
@@ -223,8 +270,8 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
             </div>
           </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 

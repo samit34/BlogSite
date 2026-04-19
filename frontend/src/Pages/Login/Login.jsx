@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../auth-pages.css";
 import "./Login.css";
 import { FaEye } from "react-icons/fa";
 import api from "../../api/client";
@@ -6,105 +7,125 @@ import { useAuth } from "../Authcontext";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaUserAlt } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { jwtDecode } from "jwt-decode";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import { getApiErrorMessage } from "../../utils/apiErrorMessage";
 
 const Login = () => {
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, isauth , setRole } = useAuth();
-
+  const { login, isauth, setRole } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const loginuser = async (e) => {
     e.preventDefault();
     const data = {
-      username: name,
+      username: name.trim(),
       password: password,
     };
 
     try {
       const res = await api.post("/user/login", data);
-      console.log("Login response:", res.data.token);
-
       const newToken = res.data.token;
-     
-      localStorage.setItem("token", newToken);
-      setRole(newToken.role)
-      login();
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        navigate("/block");
+      if (!newToken) {
+        showToast("Login did not return a token. Please try again.", "error");
+        return;
       }
 
-      console.log("Login error:", err);
+      localStorage.setItem("token", newToken);
+      try {
+        const decoded = jwtDecode(newToken);
+        if (decoded?.role) setRole(decoded.role);
+      } catch {
+        /* ignore decode issues */
+      }
+
+      showToast(res.data.message || "Welcome back!", "success");
+      login();
+    } catch (err) {
+      const status = err.response?.status;
+      const msg = getApiErrorMessage(err, "Login failed.");
+
+      if (status === 403) {
+        showToast(msg, "error");
+        navigate("/block");
+        return;
+      }
+
+      showToast(msg, "error");
     }
   };
 
-  const toggleShowPassword = () => setShow((prev) => !prev);
-
   if (isauth) {
-    console.log("login funcationis trigger");
-    return <Navigate to="/" />; // Redirect if already logged in
+    return <Navigate to="/" replace />;
   }
-  return (
-    <>
 
-         {/* <div className="login-con">
-         <div class="header">
-      <div class="logo">
-        <div><SiStudyverse />
+  return (
+    <main className="auth-page">
+      <div className="auth-shell">
+        <div className="auth-card">
+          <p className="auth-kicker">Chronic</p>
+          <h1 className="auth-title">Welcome back</h1>
+          <p className="auth-lede">
+            Sign in with your <strong>username</strong> or{" "}
+            <strong>email</strong> and password.
+          </p>
+
+          <form className="auth-form" onSubmit={loginuser} noValidate>
+            <div className="auth-field">
+              <FaUserAlt className="auth-field__icon" aria-hidden />
+              <input
+                type="text"
+                name="loginId"
+                placeholder="Username or email"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="auth-field__input"
+                autoComplete="username"
+                aria-label="Username or email address"
+                required
+              />
+            </div>
+
+            <div className="auth-field auth-field--password">
+              <RiLockPasswordFill className="auth-field__icon" aria-hidden />
+              <input
+                type={show ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="auth-field__input"
+                autoComplete="current-password"
+                aria-label="Password"
+                required
+              />
+              <button
+                type="button"
+                className="auth-field__toggle"
+                onClick={() => setShow((prev) => !prev)}
+                aria-label={show ? "Hide password" : "Show password"}
+              >
+                <FaEye size={18} aria-hidden />
+              </button>
+            </div>
+
+            <button type="submit" className="auth-submit">
+              Sign in
+            </button>
+          </form>
+
+          <p className="auth-footer">
+            Don&apos;t have an account?{" "}
+            <Link className="auth-link" to="/signup">
+              Create one
+            </Link>
+          </p>
         </div>
       </div>
-      <h2>Company<span class="highlight">Name</span></h2>
-
-    </div>
-    </div> */}
-
-
-
-
-      <form>
-        <div className="login-page">
-          <h1 className="text-black">Login page</h1>
-
-          <div className="name">
-            <FaUserAlt className="login-name-icon" />
-
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="login-name-input"
-            />
-          </div>
-          <div className="password">
-            <RiLockPasswordFill className="password-icon-first" />
-            <input
-              type={show ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="login-password-input"
-            />
-
-            <FaEye className="password-icon" onClick={toggleShowPassword} />
-          </div>
-          <button className="login-button" onClick={loginuser}>
-            Login
-          </button>
-          <div className="text-black ">
-            don"t have an account Signup now ?
-            <Link className="login-button  ms-1 " to={"/signup"}>
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </form>
-    </>
+    </main>
   );
 };
 

@@ -384,4 +384,9 @@
   .home-latest__sticky {
     position: static;
   }
+
+  /* Hide “Latest blog” while search/filters are active so the feed can use the full width */
+  .home-page--searching .home-latest {
+    display: none !important;
+  }
 }

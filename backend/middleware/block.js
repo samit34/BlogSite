@@ -1,29 +1,47 @@
-const user = require('../model/userschema');
+const User = require('../model/userschema');
 
+/**
+ * For /login: only block requests when the user exists and is blocked.
+ * Unknown usernames must reach the login handler so it can return a generic invalid-credentials response.
+ */
 const blockMiddleware = async (req, res, next) => {
   const { username } = req.body;
 
-
-  console.log("this is a name in  blockmiddleware" , username)
-
   try {
-   
-    const userInfo = await user.findOne({ username: username });
-
-   
-    if (!userInfo) {
-      return res.status(404).json({ message: 'User not found.' });
+    if (!username || String(username).trim() === '') {
+      return res.status(400).json({
+        success: false,
+        code: 'VALIDATION_ERROR',
+        message: 'Email or username is required.',
+      });
     }
 
-   
-    if (userInfo.status === 'block') {
-      return res.status(403).json({ message: 'Your account is blocked. Please contact support.' });
+    const id = String(username).trim();
+    const userInfo = await User.findOne({
+      $or: [{ username: id }, { email: id.toLowerCase() }],
+    });
+
+    if (!userInfo) {
+      return next();
+    }
+
+    const blocked =
+      userInfo.status === 'blocked' || userInfo.status === 'block';
+    if (blocked) {
+      return res.status(403).json({
+        success: false,
+        code: 'ACCOUNT_BLOCKED',
+        message: 'Your account is blocked. Please contact support.',
+      });
     }
 
     next();
   } catch (err) {
-    
-    return res.status(500).json({ message: 'An error occurred.', error: err.message });
+    return res.status(500).json({
+      success: false,
+      code: 'SERVER_ERROR',
+      message: 'An error occurred while checking your account.',
+    });
   }
 };
 

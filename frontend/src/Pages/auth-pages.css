@@ -1,0 +1,212 @@
+/* Shared auth UI — Chronic (#3444bc, Montserrat) */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(
+    165deg,
+    #f4f6fb 0%,
+    #e8ecf6 40%,
+    #fafbfd 100%
+  );
+}
+
+.auth-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(52, 68, 188, 0.12),
+    transparent 55%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 26rem;
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem 1.75rem 1.75rem;
+  box-shadow: 0 20px 56px rgba(15, 20, 35, 0.1);
+  border: 1px solid rgba(20, 25, 40, 0.08);
+}
+
+.auth-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #3444bc;
+  margin: 0 0 0.5rem;
+  text-align: center;
+}
+
+.auth-title {
+  font-family: "Montserrat", serif;
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  font-weight: 800;
+  color: #12151c;
+  margin: 0 0 0.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.auth-lede {
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #5c6474;
+  text-align: center;
+}
+
+.auth-lede strong {
+  color: #3444bc;
+  font-weight: 700;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.auth-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-field__icon {
+  position: absolute;
+  left: 1rem;
+  font-size: 1.1rem;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+.auth-field:focus-within .auth-field__icon {
+  color: #3444bc;
+}
+
+.auth-field__input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.85rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #1a1f2e;
+  background: #fafbfd;
+  border: 1px solid rgba(20, 25, 40, 0.12);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.auth-field__input::placeholder {
+  color: #9ca3af;
+}
+
+.auth-field__input:hover {
+  background: #fff;
+  border-color: rgba(52, 68, 188, 0.25);
+}
+
+.auth-field__input:focus {
+  background: #fff;
+  border-color: rgba(52, 68, 188, 0.55);
+  box-shadow: 0 0 0 3px rgba(52, 68, 188, 0.12);
+}
+
+.auth-field--password .auth-field__input {
+  padding-right: 2.75rem;
+}
+
+.auth-field__toggle {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.35rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 8px;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.auth-field__toggle:hover {
+  color: #3444bc;
+  background: rgba(52, 68, 188, 0.08);
+}
+
+.auth-submit {
+  margin-top: 0.35rem;
+  width: 100%;
+  padding: 0.9rem 1.25rem;
+  font-family: "Montserrat", serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 68, 188, 1) 0%,
+    rgba(90, 110, 220, 1) 100%
+  );
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(52, 68, 188, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 36px rgba(52, 68, 188, 0.4);
+}
+
+.auth-submit:active {
+  transform: translateY(0);
+}
+
+.auth-footer {
+  margin: 1.35rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #5c6474;
+}
+
+.auth-link {
+  color: #3444bc;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 400px) {
+  .auth-card {
+    padding: 1.5rem 1.25rem;
+  }
+}

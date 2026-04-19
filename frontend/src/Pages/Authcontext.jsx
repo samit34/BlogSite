@@ -26,7 +26,7 @@ const AuthContext = ({ children }) => {
     console.log("the logout funcation is running");
     localStorage.removeItem("token");
     setAuth(false);
-    navigate("/");
+    navigate("/login");
   }, [navigate]);
 
   useEffect(() => {

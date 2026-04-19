@@ -19,46 +19,72 @@ const userSignup =  async (req, res) => {
  
  
 
-  try { 
-    // Check if username or email already exists
-    const existingUser = await User.find({ $or: [{ username:username }, { email:email }] });
-    console.log("this is a existinguser" , existingUser )
-    if (existingUser.length>0) {
-      return res.status(400).json({ message: "Username or email already exists insignup " });
+  try {
+    if (!username?.trim() || !email?.trim() || !password) {
+      return res.status(400).json({
+        success: false,
+        code: "VALIDATION_ERROR",
+        message: "Username, email, and password are required.",
+      });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-      const role = "user";      
+    const u = username.trim();
+    const em = email.trim().toLowerCase();
 
-    // Create new user
-    const newUser = new User({
-      username,
-      email,
-      phone,
-      role,
-      password: hashedPassword,
+    const existingUser = await User.findOne({
+      $or: [{ username: u }, { email: em }],
     });
 
-    await newUser.save();
-
-    const data = await  User.find({username});
- 
-    const id = data[0]._id
-
-    const payload = {
-      username: username,
-      userid:  id,
-      role : role,
-
+    if (existingUser) {
+      const takenUsername = existingUser.username === u;
+      return res.status(409).json({
+        success: false,
+        code: takenUsername ? "USERNAME_TAKEN" : "EMAIL_TAKEN",
+        message: takenUsername
+          ? "This username is already taken."
+          : "This email is already registered.",
+      });
     }
-    const  token =   generateToken(payload)
 
-    res.status(201).json({ token, message: "Signup successful" });
-  } 
-   catch (err) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const role = "user";
+
+    await new User({
+      username: u,
+      email: em,
+      phone: phone?.trim() || undefined,
+      role,
+      password: hashedPassword,
+    }).save();
+
+    const created = await User.findOne({ username: u });
+    const payload = {
+      username: created.username,
+      userid: created._id,
+      role,
+    };
+    const token = generateToken(payload);
+
+    return res.status(201).json({
+      success: true,
+      message: "Account created successfully.",
+      token,
+      user: { username: created.username, role },
+    });
+  } catch (err) {
     console.error(err);
-    res.status(500).send("There is an error in the backend");
+    if (err.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        code: "DUPLICATE_ENTRY",
+        message: "An account with this email or username already exists.",
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      code: "SERVER_ERROR",
+      message: "Something went wrong. Please try again later.",
+    });
   }
 };
 
@@ -66,44 +92,58 @@ const userSignup =  async (req, res) => {
 const login = async (req, res) => {
   const { username, password } = req.body;
 
-
   try {
-    console.log("Login attempt with:", username, password);
+    if (!username?.trim() || !password) {
+      return res.status(400).json({
+        success: false,
+        code: "VALIDATION_ERROR",
+        message: "Email or username and password are required.",
+      });
+    }
 
-    // Check if the user exists in the database
-    const user = await User.findOne({ username });
+    const id = String(username).trim();
+    const user = await User.findOne({
+      $or: [{ username: id }, { email: id.toLowerCase() }],
+    });
 
     if (!user) {
-      console.log(" the user is not exist ")
-      return res.status(400).json({ error: "Invalid username or password" });
-
+      return res.status(401).json({
+        success: false,
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid email, username, or password.",
+      });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      console.log("the password is not exist")
-      return res.status(400).json({ error: "Invalid username or password" });
+      return res.status(401).json({
+        success: false,
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid email, username, or password.",
+      });
     }
-      
 
     const payload = {
       username: user.username,
       userid: user._id,
-      role : user.role
+      role: user.role,
+    };
 
-    }
-    console.log("this is a samit role" , user.role)
-
-    console.log("this is a pay load ", payload);
-
-    const token = generateToken(payload)
-    res.status(200).json({ message: "Login successful", user: { username: user.username }, token: token });
-    console.log("the user login succesfully")
-
+    const token = generateToken(payload);
+    return res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      token,
+      user: { username: user.username, role: user.role },
+    });
   } catch (error) {
     console.error("Error during login:", error);
-    res.status(500).json({ error: "An error occurred while logging in" });
+    return res.status(500).json({
+      success: false,
+      code: "SERVER_ERROR",
+      message: "An error occurred while logging in.",
+    });
   }
 };
 

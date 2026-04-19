@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api, { API_BASE_URL } from "../../api/client";
 import listFromResponse from "../../api/listFromResponse";
 import "react-quill/dist/quill.snow.css";
@@ -43,8 +43,8 @@ const Home = React.memo(() => {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchInputRef = useRef(null);
 
-  const token = localStorage.getItem("token");
-  const { logout } = useAuth();
+  const { logout, isauth } = useAuth();
+  const navigate = useNavigate();
   const { showToast } = useToast();
 
   const hasFilters = Boolean(
@@ -115,36 +115,71 @@ const Home = React.memo(() => {
 
   return (
     <>
-      <nav className="home-nav-shell">
+      <nav className="home-nav-shell navbar-chronic">
         <div
           className="offcanvas offcanvas-start"
           tabIndex={-1}
           id="offcanvasExample"
           aria-labelledby="offcanvasExampleLabel"
         >
-          <div className="offcanvas-header">
-            <h5 className="offcanvas-title text-white " id="offcanvasExampleLabel">
-              Menu
-            </h5>
+          <div className="offcanvas-header navbar-chronic__drawer-header">
+            <div>
+              <p className="navbar-chronic__drawer-kicker">Chronic</p>
+              <h2
+                className="offcanvas-title text-white h5 mb-0"
+                id="offcanvasExampleLabel"
+              >
+                Menu
+              </h2>
+            </div>
             <button
               type="button"
-              className="btn-close text-white bg-white"
+              className="btn-close btn-close-white"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
-            ></button>
+            />
           </div>
-          <div className="offcanvas-body">
+          <div className="offcanvas-body navbar-chronic__drawer-body">
             <div className="col-12 slide-bar ">
               <div className="slid-com  col-10">
-                <Link to={"/layout/account"}> Account </Link>
-                <Link to={"/layout/blog"}> Blogs</Link>
-                <Link to={"/layout/wishlist"}> Wishlist</Link>
-                {token ? (
-                  <Link onClick={() => logout()}> Logout</Link>
+                <Link className="navbar-chronic__drawer-link" to="/layout/account">
+                  Account
+                </Link>
+                <Link className="navbar-chronic__drawer-link" to="/layout/blog">
+                  Blogs
+                </Link>
+                <Link className="navbar-chronic__drawer-link" to="/layout/wishlist">
+                  Wishlist
+                </Link>
+                <Link className="navbar-chronic__drawer-link" to="/layout/about">
+                  About
+                </Link>
+                <Link className="navbar-chronic__drawer-link" to="/layout/contact">
+                  Contact
+                </Link>
+                {isauth ? (
+                  <button
+                    type="button"
+                    className="sidebar-auth-btn"
+                    data-bs-dismiss="offcanvas"
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </button>
                 ) : (
-                  <Link to={"/login"}> Login</Link>
+                  <button
+                    type="button"
+                    className="sidebar-auth-btn"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Sign in"
+                    onClick={() => navigate("/login")}
+                  >
+                    Login
+                  </button>
                 )}
-                <Link to={"/layout/admin"}> Post a story</Link>
+                <Link className="navbar-chronic__drawer-link" to="/layout/admin">
+                  Post a story
+                </Link>
               </div>
             </div>
           </div>
@@ -166,11 +201,19 @@ const Home = React.memo(() => {
                     <p>Blogs &amp; magazine</p>
                   </div>
                   <div className=" col-md-4 nav-account-whislist">
-                    <Link to={"/layout/account"}>
-                      <VscAccount />
+                    <Link
+                      to="/layout/account"
+                      className="navbar-chronic__icon-link"
+                      aria-label="Account"
+                    >
+                      <VscAccount aria-hidden />
                     </Link>
-                    <Link to={"/layout/wishlist"}>
-                      <PiHandbagLight />
+                    <Link
+                      to="/layout/wishlist"
+                      className="navbar-chronic__icon-link"
+                      aria-label="Wishlist"
+                    >
+                      <PiHandbagLight aria-hidden />
                     </Link>
                   </div>
                 </div>
@@ -178,25 +221,26 @@ const Home = React.memo(() => {
               <div className="nav-com">
                 <div className="nav-inner-com row align-items-center">
                   <div className="col-md-2 col-6  m-0">
-                    <Link>
-                      <HiBars3BottomLeft
-                        className="nav-bars  btn btn-primary "
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasExample"
-                        aria-controls="offcanvasExample"
-                      />
-                    </Link>
+                    <button
+                      type="button"
+                      className="navbar-chronic__menu-btn"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#offcanvasExample"
+                      aria-controls="offcanvasExample"
+                      aria-label="Open menu"
+                    >
+                      <HiBars3BottomLeft className="nav-bars" aria-hidden />
+                    </button>
                   </div>
                   <div className="col-md-8 m-0 nav-com-smaller">
-                    <Link to={"/"} className="text-black home-nav-link">
-                      HOME
+                    <Link to={"/"} className="home-nav-link">
+                      Home
                     </Link>
                     <Link to={"/layout/contact"} className="home-nav-link">
-                      CONTACT
+                      Contact
                     </Link>
                     <Link to={"/layout/about"} className="home-nav-link">
-                      ABOUT
+                      About
                     </Link>
                     <Link to={"/layout/blog"} className="home-nav-link">
                       Archive
@@ -233,11 +277,11 @@ const Home = React.memo(() => {
                   <div className="serach-div col-md-2 col-6 m-0 ">
                     <button
                       type="button"
-                      className="nav-search-trigger"
+                      className="navbar-chronic__search-btn"
                       aria-expanded={searchOpen}
                       onClick={showserach}
                     >
-                      <CiSearch className="serach text-black" aria-hidden />
+                      <CiSearch className="serach" aria-hidden />
                       <span className="visually-hidden">Open search</span>
                     </button>
                   </div>
@@ -300,7 +344,11 @@ const Home = React.memo(() => {
         <TopBarSlider />
       </ScrollRevealWide>
 
-      <main className="home-page">
+      <main
+        className={`home-page${
+          searchOpen || hasFilters ? " home-page--searching" : ""
+        }`}
+      >
         <div className="container home-page__inner">
           <header className="home-page__intro">
             <p className="home-page__kicker">Magazine</p>
