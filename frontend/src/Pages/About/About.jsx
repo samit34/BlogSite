@@ -2,7 +2,6 @@ import React from "react";
 import "./About.css";
 import { ScrollReveal, ScrollRevealWide } from "../../Components/motion/ScrollReveal";
 import { FaPenFancy, FaCompass, FaUsers, FaHeart } from "react-icons/fa";
-import { SiMongodb, SiExpress, SiReact, SiNodedotjs } from "react-icons/si";
 
 const About = () => {
   const features = [
@@ -71,29 +70,11 @@ const About = () => {
           </section>
         </ScrollRevealWide>
 
-        {/* <ScrollReveal>
-          <section className="about-section about-stack">
-            <h2 className="about-section__title">Under the hood</h2>
-            <p className="about-stack__subtitle">
-              The site runs on a modern full-stack setup—quick pages, secure accounts, and
-              plenty of headroom as Chronic grows.
-            </p>
-            <ul className="about-stack__badges" aria-label="Technology stack">
-              <li className="about-stack__badge">
-                <SiMongodb /> MongoDB
-              </li>
-              <li className="about-stack__badge">
-                <SiExpress /> Express
-              </li>
-              <li className="about-stack__badge about-stack__badge--accent">
-                <SiReact /> React
-              </li>
-              <li className="about-stack__badge">
-                <SiNodedotjs /> Node.js
-              </li>
-            </ul>
-          </section>
-        </ScrollReveal> */}
+        {/* Optional stack section (no icon imports required if uncommented):
+        <ScrollReveal>
+          <section className="about-section about-stack">...</section>
+        </ScrollReveal>
+        */}
 
         <ScrollRevealWide>
           <section className="about-author">

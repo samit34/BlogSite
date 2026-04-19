@@ -1,112 +1,141 @@
-/* Footer Component CSS */
-.section-seventeen {
-    background: black;
-    padding: 40px 15px;
-  }
-  
-  /* .inner-seventeen {
-    
-  } */
-  
-  .col-one h2 {
-    color: white;
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    position: relative;
-  }
-  
-  .col-one h2::after {
-    content: "";
-    position: absolute;
-    display: block;
-    width: 50px;
-    height: 3px;
-    background: white;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-  }
-  
-  .box p {
-    margin: 5px 0;
-    color: white;
-    font-size: 14px;
-  }
-  
+/* Footer — Chronic */
 
+.footer-section {
+  background: linear-gradient(
+    165deg,
+    #0d0f14 0%,
+    #1a1d26 45%,
+    #12151c 100%
+  );
+  padding: 3rem 1rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
 
-  .box a {
-    margin: 5px 0;
-    color: white;
-    font-size: 14px;
-    text-decoration: none !important;
-    margin: 0px;
-  }
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
+.footer-grid {
+  --footer-gap: 2rem;
+}
 
-  .box h4 {
-    color: white;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-  
+.footer-col {
+  margin-bottom: 2rem;
+}
 
-  .footer-header{
-    display: flex;
-        
-        flex-direction: column;
-  }
+.footer-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #3444bc;
+  margin: 0 0 0.35rem;
+}
 
-  .last-input {
-    flex: 1;
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 50px 0 0 50px;
+.footer-heading {
+  font-family: "Montserrat", serif;
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.footer-subheading {
+  font-family: "Montserrat", serif;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  letter-spacing: 0.02em;
+}
+
+.footer-text {
+  margin: 0.35rem 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.footer-text a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(52, 68, 188, 0.45);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-text a:hover {
+  color: #fff;
+  border-bottom-color: #3444bc;
+}
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-nav a {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s ease, padding-left 0.2s ease;
+}
+
+.footer-nav a:hover {
+  color: #fff;
+  padding-left: 4px;
+}
+
+.footer-blurb {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  max-width: 22rem;
+}
+
+.footer-rule {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0.5rem 0 1.25rem;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.footer-brand-name {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: "Montserrat", serif;
+}
+
+.footer-copy-muted {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.footer-credit {
+  margin: 0.65rem 0 0;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.footer-credit-name {
+  color: #5a7cff;
+  font-weight: 600;
+}
+
+@media (min-width: 992px) {
+  .footer-col--brand {
+    padding-right: 1rem;
   }
-  
-  .nav-button {
-    background: black;
-    color: white;
-    /* padding: 10px 20px; */
-    border-radius: 0 50px 50px 0;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-  }
-  
-  .nav-button:hover {
-    background: white;
-    color: black;
-  }
-  
-  .last-row .last-div p {
-    font-size: 14px;
-    color: white;
-    text-align: center;
-    margin: 0;
-  }
-  
-  .last-row .credits {
-    text-align: center;
-    margin-top: 10px;
-    color: white;
-  }
-  
-  .last-row .credits span {
-    color: white;
-    font-weight: 400;
-  }
-  
-  hr {
-    border: 0.5px solid #c7dee6;
-  }
-  
-  .sitename {
-    font-weight: 700;
-    color: white;
-  }
-  
+}

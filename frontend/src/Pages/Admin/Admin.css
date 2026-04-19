@@ -1,198 +1,237 @@
+/* —— Post blog / admin composer —— */
+.post-editor-page {
+  background: linear-gradient(180deg, #fafbfd 0%, #ffffff 50%);
+  padding: 0 0 3.5rem;
+  min-height: 70vh;
+}
 
-
-
-
-.blog-page-heading h1{
+.post-editor-page__hero {
   text-align: center;
-  color: black;
+  max-width: 32rem;
+  margin: 0 auto 1.75rem;
+  padding: 2rem 1rem 0;
 }
 
-
-.sec-admin{
-    background: white;
-   display: flex;
-   flex-direction: column;
-justify-content: center;
-align-items: center;
-margin-top: 0rem;
-/* padding: 2rem 0px; */
-padding: 2rem 0px 3.5rem 0px;
-color:  black rtant
+.post-editor-page__kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: #3444bc;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
 }
 
+.post-editor-page__title {
+  font-family: "Montserrat", serif;
+  font-size: clamp(1.65rem, 3vw, 2.1rem);
+  font-weight: 800;
+  color: #12151c;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
 
-.admin {
-    width: 100%;
-    max-width: 800px;
+.post-editor-page__lede {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: #5c6474;
+}
 
-    /* background: rgba(255, 255, 255, 0.2);  */
-    border: 1px solid black;
-     
-    backdrop-filter: blur(10px); 
-    /* -webkit-backdrop-filter: blur(10px); */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    padding: 70px 50px; 
-  
+.sec-admin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
+  padding: 0 1rem 2rem;
+  color: #1a1f2e;
+}
 
-    
-  }
-  .admin input , .admin .ql-container ,.ql-toolbar{
-    background-color: white;
-    
-  }
-  .admin input ,  .quill {
-      border: 1px solid black;
-    
-  }
-  
-  .ql-toolbar{
-border: 1px solid black;
-  }
-  .ql-container{
- border: 1px solid black;
-  }
-
-
-  .admin h1{
-        font-size: 1rem;
-  }
-  /* Centering content and creating spacing */
-  .admin .text-center {
-    text-align: center;
-  }
-  
-  /* Styling for the input section */
-  .blog-heading-input {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    margin-bottom: 15px ;
-    border: 1px solid black;
-    /* border-radius: 8px; */
-    outline: none;
-  }
-  
- 
-  
-  /* Styling for Quill (ReactQuill) editor */
-  .ReactQuill {
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .ReactQuill .ql-editor {
-    min-height: 200px;
-    padding: 10px;
-    border: 1px solid black;
-    /* border-radius: 8px; */
-    background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Category dropdown styles */
-  .dropdown-menu {
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  .show li :hover{
-       
-    color: white;
-  }
-
-  
-  .dropdown-toggle {
-    width: 100%;
-    padding: 12px;
-    background-color: #ff6f61;
-    color: black;
-    /* border-radius: 8px; */
-    font-size: 1rem;
-    text-align: left;
-  }
-  
-  .dropdown-toggle:focus {
-    outline: none;
-  }
-  
-  .dropdown-item {
-    font-size: 1rem;
-    padding: 10px 15px;
-  }
-  
-  .dropdown-item:hover {
-    background-color: black;
-  }
-  
-  .dropdown-menu .dropdown-item {
-    cursor: pointer;
-  }
-  
- 
-  
-
-
-.photo-admin{
+.post-editor-card {
   width: 100%;
+  max-width: 820px;
+  border: 1px solid rgba(20, 25, 40, 0.1);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(15, 20, 35, 0.08);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
-.heading-admin{
+.post-editor-card .admin {
   width: 100%;
-}
-
-.thumnail-admin{
-  width: 100%;
-}
-
-.admin-blog{
-  width: 100%;
-}
-
-button.admint-btn-cat {
-  background-color: black;
-  padding:10px;
-  width:18rem;
-  border:none;
-  /* border-radius:50px; */
-  margin-top:1rem;
-  color: white;
-}
-.dropdown-menu{
-  width: 18rem;
-    text-align: center;
-}
-button.post-btn {
-  width:11rem;
-  background-color:black;
-  color: white;
+  max-width: none;
   border: none;
-  margin-top:1rem;
-  padding:10px;
-  align-content:center;
+  box-shadow: none;
+  padding: 0;
+  backdrop-filter: none;
+  gap: 1.75rem !important;
 }
 
+.post-editor-section {
+  width: 100%;
+}
 
-  
-  /* Media queries for responsiveness */
-  @media (max-width: 768px) {
-    .admin {
-      padding: 20px;
-    }
-  
-    .blog-heading-input, .ReactQuill {
-      width: 100%;
-    }
-  
-    .dropdown-toggle {
-      font-size: 1rem;
-    }
-  
-    .btn {
-      width: 100%;
-      font-size: 1.1rem;
-      padding: 12px;
-    }
+.post-editor-section__label {
+  display: block;
+  font-family: "Montserrat", serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3444bc;
+  margin-bottom: 0.5rem;
+}
+
+.post-editor-section__hint {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 0.65rem;
+}
+
+.post-editor-file {
+  position: relative;
+}
+
+.post-editor-file input[type="file"] {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.post-editor-file__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 68, 188, 1) 0%,
+    rgba(90, 110, 220, 1) 100%
+  );
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-editor-file__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(52, 68, 188, 0.35);
+}
+
+.post-editor-file__name {
+  display: block;
+  margin-top: 0.65rem;
+  font-size: 0.86rem;
+  color: #5c6474;
+  word-break: break-word;
+}
+
+.post-editor-char {
+  margin-top: 0.5rem;
+  text-align: right;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+.admin input,
+.admin .ql-container,
+.ql-toolbar {
+  background-color: #fff;
+}
+
+.admin .quill {
+  border: 1px solid rgba(20, 25, 40, 0.14);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ql-toolbar {
+  border: 1px solid rgba(20, 25, 40, 0.14) !important;
+  border-bottom: none !important;
+  border-radius: 12px 12px 0 0;
+}
+
+.ql-container {
+  border: 1px solid rgba(20, 25, 40, 0.14) !important;
+  border-radius: 0 0 12px 12px;
+}
+
+.admin-blog .ql-container {
+  min-height: 280px;
+}
+
+.admin-blog .ql-editor {
+  min-height: 240px;
+}
+
+.post-editor-select-wrap {
+  width: 100%;
+}
+
+.post-editor-select {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1f2e;
+  background: #fafbfd;
+  border: 1px solid rgba(20, 25, 40, 0.14);
+  border-radius: 12px;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.post-editor-select:focus {
+  outline: none;
+  border-color: rgba(52, 68, 188, 0.55);
+  box-shadow: 0 0 0 3px rgba(52, 68, 188, 0.15);
+}
+
+.post-editor-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+button.post-btn {
+  min-width: 12rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 68, 188, 1) 0%,
+    rgba(90, 110, 220, 1) 100%
+  );
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button.post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(52, 68, 188, 0.35);
+}
+
+.blog-page-heading {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .post-editor-card {
+    padding: 1.25rem;
   }
-  
-  
+}

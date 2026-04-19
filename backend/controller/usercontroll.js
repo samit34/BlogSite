@@ -370,26 +370,34 @@ const wishpage = async (req, res) => {
 };
 
 
-const deletecard = async(req ,res)=>{
-
-  const {id}  = req.body 
-   const username = req.user.username
-  console.log("this is is in deletecard" ,id , username)
-    try { 
-      const wishcard = await wish.findOneAndDelete(
-        { username: username, id:  [id]  }, 
-        
-        { new: true } 
-      );
-
-       await res.status(200).json({message: "the card delete sucessfully" })
-    } catch (error) {
-      res.status(500).json({message: "there is a an err card not delete" ,error})
-      console.log("this is a delete error " , error)
-
+const deletecard = async (req, res) => {
+  const { id } = req.body;
+  const username = req.user.username;
+  const idStr = id != null ? String(id) : "";
+  console.log("this is is in deletecard", idStr, username);
+  try {
+    if (!idStr) {
+      return res.status(400).json({ message: "Blog id is required" });
     }
-    
-}
+
+    // Wishlist stores `id` as [String]; match the blog _id string (not id: [id], which broke the query)
+    const wishcard = await wish.findOneAndDelete({
+      username,
+      id: idStr,
+    });
+
+    if (!wishcard) {
+      return res.status(404).json({ message: "Wishlist item not found" });
+    }
+
+    return res.status(200).json({ message: "the card delete sucessfully" });
+  } catch (error) {
+    console.log("this is a delete error ", error);
+    return res
+      .status(500)
+      .json({ message: "there is a an err card not delete", error: String(error) });
+  }
+};
 
 
 const account = async (req, res) => {

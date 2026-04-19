@@ -15,6 +15,7 @@ import About from "./About/About";
 import { useNavigate } from "react-router-dom";
 import Blog from "../Pages/Blog/Blog";
 import Privateroute from "./Privateroute";
+import PageLoader from "../Components/Loader/PageLoader";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -28,8 +29,9 @@ const Layout = () => {
   };
 
   if (loading) {
-    // Optionally display a loading spinner or message while the authentication check is in progress
-    return <div>Loading...</div>;
+    return (
+      <PageLoader message="Checking your session" fullScreen />
+    );
   }
 
   console.log("the value of isauth in layout", isauth);

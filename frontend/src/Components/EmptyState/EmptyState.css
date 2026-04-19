@@ -1,0 +1,38 @@
+.empty-state {
+  width: 100%;
+  max-width: 28rem;
+  margin: 1.5rem auto;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px dashed rgba(52, 68, 188, 0.28);
+  background:  transparent;
+  
+  font-family: "Montserrat", serif;
+}
+
+.empty-state--compact {
+  margin: 1rem auto;
+  padding: 1.25rem 1rem;
+  max-width: 22rem;
+}
+
+.empty-state--wide {
+  max-width: 36rem;
+}
+
+.empty-state__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1f2e;
+  line-height: 1.35;
+}
+
+.empty-state__hint {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #5c6474;
+  line-height: 1.5;
+}

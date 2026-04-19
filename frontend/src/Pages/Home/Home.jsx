@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import api, { API_BASE_URL } from "../../api/client";
 import listFromResponse from "../../api/listFromResponse";
 import "react-quill/dist/quill.snow.css";
 import "./Home.css";
+import "./home-page.css";
+import "../../Components/Navbar/navbar.css";
 import DOMPurify from "dompurify";
 import { AiFillLike } from "react-icons/ai";
 import { useBlog } from "../Blogcontext";
 
 import { CiSearch } from "react-icons/ci";
-
-// new nav icon
 
 import { FaInstagram } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
@@ -27,26 +27,54 @@ import {
   ScrollReveal,
   ScrollRevealWide,
 } from "../../Components/motion/ScrollReveal";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import { addToWishlistWithToast } from "../../utils/wishlistNotify";
+import PageLoader from "../../Components/Loader/PageLoader";
+import EmptyState from "../../Components/EmptyState/EmptyState";
+import { filterPosts } from "../../utils/filterPosts";
+
+const FEED_PAGE = 12;
+const LATEST_COUNT = 7;
 
 const Home = React.memo(() => {
-  const serachref = useRef();
-  // const navRef = useRef()
-  const [serach, setSerach] = useState("");
+  const serachref = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchInputRef = useRef(null);
+
   const token = localStorage.getItem("token");
   const { logout } = useAuth();
+  const { showToast } = useToast();
 
-  const val = (id) => {
-    setSerach(id);
-  };
+  const hasFilters = Boolean(
+    String(searchQuery).trim() || String(categoryFilter).trim()
+  );
 
   const showserach = () => {
-    serachref.current.classList.toggle("active-serach");
+    setSearchOpen((o) => !o);
   };
 
-  // navbar finish here
-  const { fetchBlogs, handleLike, blog } = useBlog();
+  useEffect(() => {
+    const el = serachref.current;
+    if (!el) return;
+    el.classList.toggle("active-serach", searchOpen);
+    if (searchOpen) {
+      requestAnimationFrame(() => searchInputRef.current?.focus());
+    }
+  }, [searchOpen]);
+
+  useEffect(() => {
+    const onEsc = (e) => {
+      if (e.key === "Escape" && searchOpen) setSearchOpen(false);
+    };
+    document.addEventListener("keydown", onEsc);
+    return () => document.removeEventListener("keydown", onEsc);
+  }, [searchOpen]);
+
+  const { fetchBlogs, handleLike, blog, blogsLoading } = useBlog();
   const [homecat, setHomecat] = useState([]);
-  const [pages] = useState(1);
+  const [feedPage] = useState(1);
 
   useEffect(() => {
     api
@@ -64,73 +92,59 @@ const Home = React.memo(() => {
   }, [fetchBlogs]);
 
   const wishlist = (id) => {
-    api
-      .post("/user/wishlist", { id })
-      .then((res) => {
-        alert("Card added succesfully");
-      })
-      .catch((err) => {
-        alert("card already added");
-      });
+    addToWishlistWithToast(api, id, showToast);
   };
 
-  // const shuffleArray = (array) => {
-  //   return array
-  //     .map((item) => ({ ...item, sort: Math.random() }))
-  //     .sort((a, b) => a.sort - b.sort)
-  //     .map((item) => item);
-  // };
+  const filterblog = filterPosts(blog, { searchQuery, categoryFilter });
 
-  // const getRandomBlogs = () => {
-  //   if (!Array.isArray(blog)) return [];
-  //   const filteredBlogs = blog.filter((b) => b._id !== blog?._id);
-  //   return shuffleArray(filteredBlogs)
-  // };
-  // const relatedBlogs = getRandomBlogs();
+  const feedSlice = filterblog.slice(
+    feedPage * FEED_PAGE - FEED_PAGE,
+    feedPage * FEED_PAGE
+  );
 
-  const filterblog = blog.filter((b) => {
-    if (!b) return true;
-    const lowserach = serach.toLowerCase();
-    return (
-      b.heading.toLowerCase().includes(lowserach) ||
-      b.category.toLowerCase().includes(lowserach) ||
-      b.eyecatch.toLowerCase().includes(lowserach)
-    );
-  });
+  const latestStories = useMemo(() => {
+    if (!Array.isArray(blog) || blog.length === 0) return [];
+    return [...blog]
+      .sort((a, b) => {
+        const da = parseInt(String(a?.date ?? ""), 10) || 0;
+        const db = parseInt(String(b?.date ?? ""), 10) || 0;
+        return db - da;
+      })
+      .slice(0, LATEST_COUNT);
+  }, [blog]);
 
   return (
     <>
-      {/* new nav start from here */}
-      <nav>
+      <nav className="home-nav-shell">
         <div
-          class="offcanvas offcanvas-start"
-          tabindex="-1"
+          className="offcanvas offcanvas-start"
+          tabIndex={-1}
           id="offcanvasExample"
           aria-labelledby="offcanvasExampleLabel"
         >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title text-white " id="offcanvasExampleLabel">
-              Feature
+          <div className="offcanvas-header">
+            <h5 className="offcanvas-title text-white " id="offcanvasExampleLabel">
+              Menu
             </h5>
             <button
               type="button"
-              class="btn-close text-white bg-white"
+              className="btn-close text-white bg-white"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
           </div>
-          <div class="offcanvas-body">
+          <div className="offcanvas-body">
             <div className="col-12 slide-bar ">
               <div className="slid-com  col-10">
                 <Link to={"/layout/account"}> Account </Link>
-                <Link to={"/layout/blogs"}> Blogs</Link>
+                <Link to={"/layout/blog"}> Blogs</Link>
                 <Link to={"/layout/wishlist"}> Wishlist</Link>
                 {token ? (
                   <Link onClick={() => logout()}> Logout</Link>
                 ) : (
                   <Link to={"/login"}> Login</Link>
                 )}
-                <Link to={"/layout/admin"}> post Blog</Link>
+                <Link to={"/layout/admin"}> Post a story</Link>
               </div>
             </div>
           </div>
@@ -149,22 +163,20 @@ const Home = React.memo(() => {
                   </div>
                   <div className=" col-md-4 nav-heading">
                     <h1>CHRONIC</h1>
-                    <p>Blogs and & Magzine</p>
+                    <p>Blogs &amp; magazine</p>
                   </div>
                   <div className=" col-md-4 nav-account-whislist">
                     <Link to={"/layout/account"}>
-                      {" "}
-                      <VscAccount />{" "}
+                      <VscAccount />
                     </Link>
                     <Link to={"/layout/wishlist"}>
-                      {" "}
                       <PiHandbagLight />
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="nav-com">
-                <div className="nav-inner-com row">
+                <div className="nav-inner-com row align-items-center">
                   <div className="col-md-2 col-6  m-0">
                     <Link>
                       <HiBars3BottomLeft
@@ -173,51 +185,109 @@ const Home = React.memo(() => {
                         data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasExample"
                         aria-controls="offcanvasExample"
-                      />{" "}
+                      />
                     </Link>
                   </div>
                   <div className="col-md-8 m-0 nav-com-smaller">
-                    <Link to={"/"} className="text-black">
-                      {" "}
-                      HOME{" "}
+                    <Link to={"/"} className="text-black home-nav-link">
+                      HOME
                     </Link>
-                    <Link to={"/layout/contact"}> CONTACT </Link>
-                    <Link to={"/layout/about"}> ABOUT </Link>
-                    <Link to={"/layout/blog"}> Blogs </Link>
+                    <Link to={"/layout/contact"} className="home-nav-link">
+                      CONTACT
+                    </Link>
+                    <Link to={"/layout/about"} className="home-nav-link">
+                      ABOUT
+                    </Link>
+                    <Link to={"/layout/blog"} className="home-nav-link">
+                      Archive
+                    </Link>
                     <select
-                      className="form-select m-0 p-0 "
-                      aria-label="Default select example"
-                      onClick={(e) => val(e.target.value)}
+                      className="nav-category-select"
+                      aria-label="Filter by category"
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
                     >
-                      <option value={""}>All</option>
+                      <option value="">All categories</option>
                       {homecat.map((cat, index) => (
-                        <option key={index} value={cat.category}>
-                          {" "}
+                        <option
+                          key={cat._id || cat.category || index}
+                          value={cat.category}
+                        >
                           {cat.category}
                         </option>
                       ))}
                     </select>
+                    {hasFilters ? (
+                      <button
+                        type="button"
+                        className="nav-clear-filters"
+                        onClick={() => {
+                          setSearchQuery("");
+                          setCategoryFilter("");
+                        }}
+                      >
+                        Clear filters
+                      </button>
+                    ) : null}
                   </div>
                   <div className="serach-div col-md-2 col-6 m-0 ">
-                    <Link>
-                      <CiSearch
-                        className="serach text-black"
-                        onClick={() => showserach()}
-                      />
-                    </Link>
+                    <button
+                      type="button"
+                      className="nav-search-trigger"
+                      aria-expanded={searchOpen}
+                      onClick={showserach}
+                    >
+                      <CiSearch className="serach text-black" aria-hidden />
+                      <span className="visually-hidden">Open search</span>
+                    </button>
                   </div>
 
-                  <div className="show-serach" ref={serachref}>
+                  <div
+                    className="show-serach"
+                    ref={serachref}
+                    role="search"
+                  >
+                    <label htmlFor="home-search-input" className="nav-search-label">
+                      Search posts
+                    </label>
                     <input
-                      type="text"
+                      id="home-search-input"
+                      ref={searchInputRef}
+                      type="search"
                       className="serach-input"
-                      placeholder="Serach"
-                      value={serach}
-                      onChange={(e) => setSerach(e.target.value)}
+                      placeholder="Search titles & stories…"
+                      autoComplete="off"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          setSearchOpen(false);
+                        }
+                      }}
                     />
-                    <button className="serach-btn" onClick={() => showserach()}>
-                      Serach
-                    </button>
+                    <div className="nav-search-actions">
+                      <button
+                        type="button"
+                        className="serach-btn serach-btn--primary"
+                        onClick={() => setSearchOpen(false)}
+                      >
+                        Done
+                      </button>
+                      {hasFilters ? (
+                        <button
+                          type="button"
+                          className="serach-btn serach-btn--ghost"
+                          onClick={() => {
+                            setSearchQuery("");
+                            setCategoryFilter("");
+                            setSearchOpen(false);
+                          }}
+                        >
+                          Clear all
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -225,118 +295,177 @@ const Home = React.memo(() => {
           </div>
         </div>
       </nav>
+
       <ScrollRevealWide>
         <TopBarSlider />
       </ScrollRevealWide>
-      <div className="container">
-        <div className="blogsection">
-          <ScrollRevealWide className="main-blog-container container d-xl-flex ">
-            <div className="col-xl-8 blog-inner-container ">
-              {filterblog.length > 0 ? (
-                filterblog
-                  .slice(pages * 12 - 12, pages * 12)
-                  .map((blog, index) => {
-                    return (
-                      <ScrollReveal
-                        key={blog._id || index}
-                        className=" cards  col-md-6 text-black text"
-                        delay={Math.min(index * 0.06, 0.54)}
-                      >
-                        <div className="inner-card">
-                          <button
-                            className="bg-white border-0 "
-                            onClick={() => wishlist(blog._id)}
-                          >
-                            {" "}
-                            <FaBookmark className="bookmark-icon" />{" "}
-                          </button>
-                          <Link to={`/layout/specificblog/${blog._id}`}>
-                            <img
-                              src={`${API_BASE_URL}/uploads/${blog.image}`}
-                              alt=""
-                            />
-                            <div className="card-content ">
-                              <p>{blog.category}</p>
-                              <div
-                                className="card-heading"
-                                dangerouslySetInnerHTML={{
-                                  __html: DOMPurify.sanitize(
-                                    blog.heading.slice(0, 50)
-                                  ),
-                                }}
-                              ></div>
-                            </div>
-                          </Link>
-                          <div className="card-detail">
-                            <p> post By {blog.username}</p>
 
-                            <p>
-                              {new Date(
-                                parseInt(blog.date)
-                              ).toLocaleDateString()}
-                            </p>
-                            <button
-                              className="like-home"
-                              onClick={() => handleLike(blog._id)}
-                            >
-                              {" "}
-                              <AiFillLike /> {blog.liked.length}
-                            </button>
-                          </div>
-                        </div>
-                      </ScrollReveal>
-                    );
-                  })
-              ) : (
-                <p>there is no data </p>
-              )}
-            </div>
+      <main className="home-page">
+        <div className="container home-page__inner">
+          <header className="home-page__intro">
+            <p className="home-page__kicker">Magazine</p>
+            <h2 className="home-page__title">Stories worth your attention</h2>
+            <p className="home-page__lede">
+              Browse the feed or open the archive—filter by topic and search
+              across every post.
+            </p>
+          </header>
 
-            <div className="col-xl-4 latest-blog  ">
-              <ScrollReveal>
-                <div className="latest-inner-container">
-                  <h1 className="text-center">Latest Blog</h1>
-
-                  {blog.length > 0 ? (
-                    blog.slice(pages * 7 - 7, pages * 7).map((blog, index) => {
-                      return (
+          <div className="blogsection">
+            {blogsLoading ? (
+              <PageLoader message="Loading stories" />
+            ) : (
+              <div className="row g-4 home-page__layout">
+                <div className="col-xl-8 order-2 order-xl-1">
+                  <div className="row g-4 home-feed">
+                    {feedSlice.length > 0 ? (
+                      feedSlice.map((post, index) => (
                         <ScrollReveal
-                          key={blog._id || index}
-                          className="latest-cards   text-black text"
-                          delay={Math.min(index * 0.05, 0.45)}
+                          key={post._id || index}
+                          className="col-12 col-md-6 home-feed__col"
+                          delay={Math.min(index * 0.06, 0.54)}
                         >
-                        <div className=" latest-inner-card">
-                          <Link to={`/layout/specificblog/${blog._id}`}>
-                            <img
-                              src={`${API_BASE_URL}/uploads/${blog.image}`}
-                              alt=""
-                            />
-                            <div className="latest-card-content ">
-                              <div
-                                className="latest-card-heading"
-                                dangerouslySetInnerHTML={{
-                                  __html: DOMPurify.sanitize(
-                                    blog.heading.slice(0, 50)
-                                  ),
-                                }}
-                              ></div>
+                          <article className="home-card">
+                            <button
+                              type="button"
+                              className="home-card__bookmark"
+                              onClick={() => wishlist(post._id)}
+                              aria-label="Save to wishlist"
+                            >
+                              <FaBookmark />
+                            </button>
+                            <Link
+                              className="home-card__link"
+                              to={`/layout/specificblog/${post._id}`}
+                            >
+                              <div className="home-card__media">
+                                <img
+                                  src={`${API_BASE_URL}/uploads/${post.image}`}
+                                  alt=""
+                                />
+                              </div>
+                              <div className="home-card__body">
+                                <span className="home-card__cat">
+                                  {post.category}
+                                </span>
+                                <div
+                                  className="home-card__title"
+                                  dangerouslySetInnerHTML={{
+                                    __html: DOMPurify.sanitize(
+                                      post.heading.slice(0, 120)
+                                    ),
+                                  }}
+                                />
+                                <span className="home-card__read">
+                                  Read article →
+                                </span>
+                              </div>
+                            </Link>
+                            <div className="home-card__footer">
+                              <span>By {post.username}</span>
+                              <span>
+                                {new Date(
+                                  parseInt(post.date)
+                                ).toLocaleDateString()}
+                              </span>
+                              <button
+                                type="button"
+                                className="home-card__like"
+                                onClick={() => handleLike(post._id)}
+                              >
+                                <AiFillLike /> {post.liked.length}
+                              </button>
                             </div>
-                          </Link>
-                        </div>
-                      </ScrollReveal>
-                    );
-                  })
-                ) : (
-                  <p>there is no data </p>
-                )}
+                          </article>
+                        </ScrollReveal>
+                      ))
+                    ) : blog.length === 0 ? (
+                      <div className="col-12">
+                        <EmptyState
+                          title="No posts yet"
+                          hint="There are no stories to show right now. Please check back soon—new pieces appear here as soon as they are published."
+                          className="empty-state--wide"
+                        />
+                      </div>
+                    ) : (
+                      <div className="col-12">
+                        <EmptyState
+                          title="No matching stories"
+                          hint="Nothing matches your filters. Clear category or search above, or try different keywords."
+                          className="empty-state--wide"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </ScrollReveal>
-            </div>
-          </ScrollRevealWide>
-        </div>
-      </div>
 
-      {/* footer is start from here */}
+                <aside
+                  className="col-xl-4 home-latest order-1 order-xl-2"
+                  aria-label="Latest stories"
+                >
+                  <div className="home-latest__sticky">
+                    <h2 className="home-latest__heading">Latest blog</h2>
+                    <p className="home-latest__sub">Newest posts first</p>
+                    {latestStories.length > 0 ? (
+                      <ul className="home-latest__list">
+                        {latestStories.map((item, index) => (
+                          <li key={item._id || index} className="home-latest__row">
+                            <Link
+                              to={`/layout/specificblog/${item._id}`}
+                              className="home-latest__item"
+                            >
+                              <div className="home-latest__thumb">
+                                <img
+                                  src={`${API_BASE_URL}/uploads/${item.image}`}
+                                  alt=""
+                                />
+                              </div>
+                              <div className="home-latest__text">
+                                <span className="home-latest__cat">
+                                  {item.category}
+                                </span>
+                                <div
+                                  className="home-latest__headline"
+                                  dangerouslySetInnerHTML={{
+                                    __html: DOMPurify.sanitize(
+                                      item.heading.slice(0, 80)
+                                    ),
+                                  }}
+                                />
+                              </div>
+                            </Link>
+                            <button
+                              type="button"
+                              className="home-latest__like"
+                              onClick={() => handleLike(item._id)}
+                              aria-label={`Like (${Array.isArray(item.liked) ? item.liked.length : 0})`}
+                            >
+                              <AiFillLike aria-hidden />
+                              <span>
+                                {Array.isArray(item.liked) ? item.liked.length : 0}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <EmptyState
+                        title="No latest posts"
+                        hint="When new articles are published, they will appear here."
+                        className="empty-state--compact"
+                      />
+                    )}
+                    <Link to="/layout/blog" className="home-latest__cta">
+                      Full archive →
+                    </Link>
+                  </div>
+                </aside>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
       <Footer />
     </>
   );

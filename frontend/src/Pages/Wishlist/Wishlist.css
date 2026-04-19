@@ -279,6 +279,32 @@ p{
   margin-top: 0rem;
 }
 
+.wishlist-container .inner-card {
+  position: relative;
+}
+
+button.wishlist-remove {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  margin: 1rem;
+  margin-top: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  line-height: 0;
+}
+
+button.wishlist-remove .bookmark-icon {
+  position: static;
+  margin: 0;
+  font-size: xx-large;
+  color: white;
+}
+
 
 .wishlist-container{
   margin-top: 2rem;

@@ -12,8 +12,10 @@ const BlogContext = createContext();
 
 const BlogContextProvider = ({ children }) => {
   const [blog, setBlog] = useState([]);
+  const [blogsLoading, setBlogsLoading] = useState(true);
 
   const fetchBlogs = useCallback(async () => {
+    setBlogsLoading(true);
     try {
       const res = await api.get("/user/showblog");
       setBlog(listFromResponse(res));
@@ -22,33 +24,31 @@ const BlogContextProvider = ({ children }) => {
       if (err.response?.data === "Token not found" || err.response?.data === "Invalid token") {
         console.log("if is running");
       }
+    } finally {
+      setBlogsLoading(false);
     }
   }, []);
 
-  // Handle like functionality
-  const handleLike = async (id) => {
+  const handleLike = useCallback(async (id) => {
     console.log("hanmdle funcation is running ", id);
     try {
       const res = await api.post("/user/like", { id });
-
-      // Update blogs with the new like status
-      const updatedBlogs = blog.map((b) =>
-        b._id === id ? { ...b, liked: res.data.blog.liked } : b
+      setBlog((prev) =>
+        prev.map((b) =>
+          b._id === id ? { ...b, liked: res.data.blog.liked } : b
+        )
       );
-      console.log("handle response like", updatedBlogs);
-      setBlog(updatedBlogs);
     } catch (err) {
       console.error("Error liking blog:", err);
     }
-  };
+  }, []);
 
-  // Handle wishlist functionality
-  const handleWishlist = async (id) => {
+  const handleWishlist = useCallback(async (id) => {
     console.log("This is the blog ID for wishlist:", id);
     try {
       await api.post("/user/wishlist", { id });
     } catch (err) {}
-  };
+  }, []);
 
   // Fetch blogs on component mount
   useEffect(() => {
@@ -62,6 +62,7 @@ const BlogContextProvider = ({ children }) => {
         handleLike,
         handleWishlist,
         blog,
+        blogsLoading,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { FaFacebookF } from "react-icons/fa";
@@ -19,7 +19,7 @@ import { PiHandbagLight } from "react-icons/pi";
 import { HiBars3BottomLeft } from "react-icons/hi2";
 import { useAuth } from "../../Pages/Authcontext";
 
-const Navbar = ({ setSerach, serach }) => {
+const Navbar = ({ setSerach = () => {}, serach = "" }) => {
   const serachref = useRef();
   const homeRef = useRef();
   const contactRef = useRef();
@@ -29,6 +29,17 @@ const Navbar = ({ setSerach, serach }) => {
   const { logout } = useAuth();
 
   const token = localStorage.getItem("token");
+
+  const categoryOptions = homecat.map((c) => c.category).filter(Boolean);
+  const selectedCategory =
+    serach === "" || categoryOptions.includes(serach) ? serach : "";
+
+  const handleCategoryChange = useCallback(
+    (event) => {
+      setSerach(event.target.value);
+    },
+    [setSerach]
+  );
 
   const showcom = (Ref) => {
     homeRef.current.classList.remove("nav-active");
@@ -40,10 +51,6 @@ const Navbar = ({ setSerach, serach }) => {
 
   const showserach = () => {
     serachref.current.classList.toggle("active-serach");
-  };
-
-  const val = (id) => {
-    setSerach(id);
   };
 
   useEffect(() => {
@@ -178,14 +185,14 @@ const Navbar = ({ setSerach, serach }) => {
                       Blogs{" "}
                     </Link>
                     <select
-                      className="form-select   m-0 p-0 overflow-auto h-3 w-4 bg-red "
-                      aria-label="Default select example"
-                      onClick={(e) => val(e.target.value)}
+                      className="nav-category-select"
+                      aria-label="Filter by category"
+                      value={selectedCategory}
+                      onChange={handleCategoryChange}
                     >
-                      <option value={""}  className="px-4">All</option>
+                      <option value="">All</option>
                       {homecat.map((cat, index) => (
-                        <option key={index} className="px-4" value={cat.category}>
-                          {" "}
+                        <option key={cat._id || cat.category || index} value={cat.category}>
                           {cat.category}
                         </option>
                       ))}

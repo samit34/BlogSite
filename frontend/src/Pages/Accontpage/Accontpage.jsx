@@ -5,14 +5,19 @@ import DOMPurify from "dompurify";
 
 import { FaCamera } from "react-icons/fa";
 import "./Account.css";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import ConfirmDialog from "../../Components/ConfirmDialog/ConfirmDialog";
+import EmptyState from "../../Components/EmptyState/EmptyState";
 
 const AccountPage = () => {
+  const { showToast } = useToast();
   const [articles, setArticles] = useState([]); // Articles state
   const [error, setError] = useState(null); // Error handling
   const [loading, setLoading] = useState(true); // Loading state
   const [username, setUsername] = useState(""); // Username
   const [profilePic, setProfilePic] = useState(""); // Profile picture URL
   const [accountNotice, setAccountNotice] = useState(null);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
 
   useEffect(() => {
     fetchAccountData();
@@ -98,22 +103,34 @@ const AccountPage = () => {
     return <p className="error-message">{error}</p>;
   }
 
-  const deletecard = (id) => {
-    console.log("this is a id in deletecard", id);
-
+  const confirmDeleteBlog = () => {
+    if (!deleteTargetId) return;
+    const id = deleteTargetId;
+    setDeleteTargetId(null);
     api
       .post("/user/card", { id })
       .then((res) => {
         console.log("there is a  responsse of deletecard ", res);
+        showToast("Blog deleted.", "success");
         fetchAccountData();
       })
-      .catch((error) => {
-        console.log("there is a error in delete", error);
+      .catch((err) => {
+        console.log("there is a error in delete", err);
+        showToast("Could not delete this post.", "error");
       });
   };
 
   return (
     <>
+      <ConfirmDialog
+        open={deleteTargetId != null}
+        title="Delete this blog?"
+        message="This will permanently delete your post. This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={confirmDeleteBlog}
+        onCancel={() => setDeleteTargetId(null)}
+      />
       <div className="account-page">
         <div className="container" style={{ padding: "auto" }}>
           {accountNotice && (
@@ -197,8 +214,9 @@ const AccountPage = () => {
                       </Link>
                       <div className="card-detail">
                         <button
+                          type="button"
                           className="delete-card"
-                          onClick={() => deletecard(blog._id)}
+                          onClick={() => setDeleteTargetId(blog._id)}
                         >
                           Delete card
                         </button>
@@ -208,7 +226,11 @@ const AccountPage = () => {
                 );
               })
             ) : (
-              <p>there is no data </p>
+              <EmptyState
+                title="No posts on your account"
+                hint="You have not published any articles yet. Use “Add blog” above to create your first post."
+                className="empty-state--wide"
+              />
             )}
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./Authcontext";
+import PageLoader from "../Components/Loader/PageLoader";
 
 const Privateroute = ({ children, requiredrole }) => {
   const { isauth, loading, role } = useAuth();
@@ -10,7 +11,7 @@ const Privateroute = ({ children, requiredrole }) => {
     requiredrole
   );
   if (loading) {
-    return <div>Loading...</div>; // Show a loading message or spinner
+    return <PageLoader message="Loading" fullScreen />;
   }
   if (requiredrole && requiredrole !== role) {
     return <Navigate to="/" replace />;

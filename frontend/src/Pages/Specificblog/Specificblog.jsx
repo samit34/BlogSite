@@ -15,14 +15,21 @@ import Footer from '../../Components/footer/Footer';
 import './Specificblog.css';
 import { useBlog } from '../Blogcontext';
 import { ScrollReveal, ScrollRevealWide } from '../../Components/motion/ScrollReveal';
+import EmptyState from '../../Components/EmptyState/EmptyState';
+import PageLoader from '../../Components/Loader/PageLoader';
+import { useToast } from '../../Components/Toast/ToastProvider';
+import { addToWishlistWithToast } from '../../utils/wishlistNotify';
 
 const Specificblog = () => {
   const { handleLike, blog } = useBlog();
+  const { showToast } = useToast();
   const { id } = useParams();
   const [sblog, setBlog] = useState(null);
   const [error, setError] = useState(null);
+  const [pending, setPending] = useState(true);
 
   const oneblog = useCallback(async () => {
+    setPending(true);
     try {
       const res = await api.post(`/user/specificblog/${id}`);
       setBlog(res.data[0]);
@@ -33,6 +40,8 @@ const Specificblog = () => {
         "Failed to fetch blog. Please try again.";
       setError(msg);
       setBlog(null);
+    } finally {
+      setPending(false);
     }
   }, [id]);
 
@@ -48,14 +57,8 @@ const Specificblog = () => {
     }
   };
 
-  const wishlist = async (id) => {
-    // setWishlistLoading(true);
-    try {
-      await api.post('/user/wishlist', { id });
-      alert("Card added successfully");
-    } catch (err) {
-      alert("Card already added");
-    } 
+  const wishlist = (id) => {
+    addToWishlistWithToast(api, id, showToast);
   };
 
  
@@ -64,48 +67,79 @@ const Specificblog = () => {
     <> 
 
       <Navbar />
-      <div className="container">
-        <ScrollReveal>
-          <h1 className="text-center">This is a specific blog</h1>
-        </ScrollReveal>
+      <div className="container specificblog-wrap">
+        {error && <p className="specificblog-error">{error}</p>}
 
-        {error && <p className="error">{error}</p>}
-
-        {sblog ? (
+        {pending ? (
+          <PageLoader message="Loading article" />
+        ) : sblog ? (
           <ScrollRevealWide>
-          <div className="specific-container">
-            <div
-              className="card-heading"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(sblog.heading.slice(0, 50)),
-              }}
-            ></div>
+            <article className="specific-article">
+              <header className="specific-article__header">
+                <span className="specific-article__cat">{sblog.category}</span>
+                <h1
+                  className="specific-article__title"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(sblog.heading),
+                  }}
+                />
+                {sblog.eyecatch ? (
+                  <div
+                    className="specific-article__deck"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(sblog.eyecatch),
+                    }}
+                  />
+                ) : null}
+                <div className="specific-article__meta">
+                  <span>By {sblog.username}</span>
+                  <span className="specific-article__meta-sep">·</span>
+                  <time dateTime={new Date(parseInt(sblog.date)).toISOString()}>
+                    {new Date(parseInt(sblog.date)).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                </div>
+              </header>
 
-            <img
-              src={`${API_BASE_URL}/uploads/${sblog.image}`}
-              alt=""
-            />
-            <p
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(sblog.content),
-              }}
-            ></p>
+              <figure className="specific-article__figure">
+                <img
+                  src={`${API_BASE_URL}/uploads/${sblog.image}`}
+                  alt=""
+                />
+              </figure>
 
-            <div className="specific-blog-detail">
-              <button className="like" onClick={runagain}>
-                <AiFillLike /> {sblog.liked.length}
-              </button>
+              <div
+                className="specific-article__body"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(sblog.content),
+                }}
+              />
 
-              <p>Posted by {sblog.username}</p>
-              <p>Posted on {new Date(parseInt(sblog.date)).toLocaleDateString()}</p>
-            </div>
-          </div>
+              <div className="specific-article__actions">
+                <button type="button" className="like" onClick={runagain}>
+                  <AiFillLike /> {sblog.liked.length}
+                </button>
+              </div>
+            </article>
           </ScrollRevealWide>
-        ) : (
-          <p>Loading blog...</p>
-        )}
+        ) : !error ? (
+          <EmptyState
+            title="Article not found"
+            hint="This post may have been removed or the link is incorrect. Return home and open another story from the list."
+            className="empty-state--wide"
+          />
+        ) : null}
 
-        <div className="col-md-12 blog-inner-container">
+        <section className="specific-related" aria-labelledby="specific-related-heading">
+          <ScrollReveal>
+            <h2 id="specific-related-heading" className="specific-related__title">
+              More stories
+            </h2>
+          </ScrollReveal>
+          <div className="col-md-12 blog-inner-container specific-related__grid">
           {blog.length > 0 ? (
             blog.slice(3,6 ).map((b, index) => (
               <ScrollReveal
@@ -114,9 +148,14 @@ const Specificblog = () => {
                 delay={Math.min(index * 0.08, 0.4)}
               >
                 <div className="inner-card">
-                  <Link onClick={() => wishlist(b._id)}>
+                  <button
+                    type="button"
+                    className="wishlist-bookmark-trigger"
+                    onClick={() => wishlist(b._id)}
+                    aria-label="Save to wishlist"
+                  >
                     <FaBookmark className="bookmark-icon" />
-                  </Link>
+                  </button>
                   <Link to={`/layout/specificblog/${b._id}`}>
                     <img
                       src={`${API_BASE_URL}/uploads/${b.image}`}
@@ -143,9 +182,14 @@ const Specificblog = () => {
               </ScrollReveal>
             ))
           ) : (
-            <p>There is no data</p>
+            <EmptyState
+              title="No more posts to show"
+              hint="There are no other stories to display here yet. Explore the home page for the full archive."
+              className="empty-state--wide"
+            />
           )}
-        </div>
+          </div>
+        </section>
       </div>
       <Footer />
     </>

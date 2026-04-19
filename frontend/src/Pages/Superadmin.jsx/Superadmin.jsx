@@ -6,12 +6,18 @@ import { useBlog } from "../Blogcontext";
 import DOMPurify from "dompurify";
 
 import { Link } from "react-router-dom";
+import { useToast } from "../../Components/Toast/ToastProvider";
+import ConfirmDialog from "../../Components/ConfirmDialog/ConfirmDialog";
+import EmptyState from "../../Components/EmptyState/EmptyState";
+
 const Superadmin = () => {
+  const { showToast } = useToast();
   const [showCategoryInput, setShowCategoryInput] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
   const [user, setUser] = useState([]);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
 
   const categoryRef = useRef(null);
   const userRef = useRef(null);
@@ -32,18 +38,20 @@ const Superadmin = () => {
     fetchBlogs();
   }, [fetchBlogs]);
 
-  const deletecard = (id) => {
-    console.log("this is a id in deletecard", id);
-
+  const confirmDeleteBlog = () => {
+    if (!deleteTargetId) return;
+    const id = deleteTargetId;
+    setDeleteTargetId(null);
     api
       .post("/user/card", { id })
       .then((res) => {
         console.log("there is a  responsse of deletecard ", res);
+        showToast("Blog deleted.", "success");
         fetchBlogs();
       })
-
       .catch((error) => {
         console.log("there is a error in delete", error);
+        showToast("Could not delete this post.", "error");
       });
   };
 
@@ -146,6 +154,15 @@ const Superadmin = () => {
 
   return (
     <>
+      <ConfirmDialog
+        open={deleteTargetId != null}
+        title="Delete this blog?"
+        message="This will permanently delete the post from the site. This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={confirmDeleteBlog}
+        onCancel={() => setDeleteTargetId(null)}
+      />
       <div className="container p-0">
         <div className="tabs  ">
           <div className="tab-one" onClick={() => toggleTab(userRef)}>
@@ -288,8 +305,9 @@ const Superadmin = () => {
                         </Link>
                         <div className="card-detail">
                           <button
+                            type="button"
                             className="delete-card"
-                            onClick={() => deletecard(blog._id)}
+                            onClick={() => setDeleteTargetId(blog._id)}
                           >
                             Delete card
                           </button>
@@ -299,7 +317,11 @@ const Superadmin = () => {
                   );
                 })
               ) : (
-                <p>there is no data </p>
+                <EmptyState
+                  title="No blog posts in the database"
+                  hint="There are no published posts to manage yet. When authors publish content, it will appear here."
+                  className="empty-state--wide"
+                />
               )}
             </div>
           </div>

@@ -456,10 +456,9 @@ padding-top: 6rem;
  
    .active-serach{  
   display: block;
-  height: 15rem;
-
-
-    
+  min-height: 18rem;
+  height: auto;
+  padding-bottom: 2rem;
 }
 
 

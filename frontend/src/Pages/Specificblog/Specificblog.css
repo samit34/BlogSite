@@ -1,86 +1,263 @@
+/* —— Single article —— */
+.specificblog-wrap {
+  padding-bottom: 3rem;
+}
 
+.specificblog-error {
+  text-align: center;
+  color: #b42318;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background: rgba(180, 35, 24, 0.08);
+}
 
+.specific-article {
+  max-width: 44rem;
+  margin: 0 auto 3rem;
+  padding: 2rem 0 0;
+}
 
-/* Specificblog.css */
+.specific-article__header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
 
-/* Overall container for the specific blog */
-.specific-container {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    background-color: white;
-    border: 1.5px solid black;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+.specific-article__cat {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #3444bc;
+  margin-bottom: 0.75rem;
+}
+
+.specific-article__title {
+  font-family: "Montserrat", serif;
+  font-size: clamp(1.85rem, 4vw, 2.65rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #12151c;
+  margin: 0 0 0.85rem;
+  letter-spacing: -0.02em;
+}
+
+.specific-article__title p {
+  margin: 0;
+}
+
+.specific-article__deck {
+  font-size: 1.12rem;
+  line-height: 1.55;
+  color: #5c6474;
+  max-width: 36rem;
+  margin: 0 auto 1.25rem;
+}
+
+.specific-article__deck p {
+  margin: 0;
+}
+
+.specific-article__meta {
+  font-size: 0.92rem;
+  color: #6b7280;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.specific-article__meta-sep {
+  opacity: 0.55;
+}
+
+.specific-article__figure {
+  margin: 0 0 2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #eef0f4;
+  box-shadow: 0 20px 50px rgba(15, 20, 35, 0.1);
+}
+
+.specific-article__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(70vh, 32rem);
+  object-fit: cover;
+}
+
+.specific-article__body {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #2a3140;
+}
+
+.specific-article__body p {
+  margin: 0 0 1.15em;
+}
+
+.specific-article__body h1,
+.specific-article__body h2,
+.specific-article__body h3 {
+  font-family: "Montserrat", serif;
+  color: #12151c;
+  margin: 1.5em 0 0.65em;
+  line-height: 1.25;
+}
+
+.specific-article__body a {
+  color: #3444bc;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.specific-article__body ul,
+.specific-article__body ol {
+  padding-left: 1.35rem;
+  margin: 0 0 1.15em;
+}
+
+.specific-article__body blockquote {
+  margin: 1.25em 0;
+  padding: 0.85rem 1.1rem;
+  border-left: 4px solid #3444bc;
+  background: rgba(52, 68, 188, 0.06);
+  color: #3d4654;
+}
+
+.specific-article__actions {
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(20, 25, 40, 0.08);
+  display: flex;
+  justify-content: center;
+}
+
+.like {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.35rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 68, 188, 1) 0%,
+    rgba(90, 110, 220, 1) 100%
+  );
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.like:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(52, 68, 188, 0.35);
+}
+
+.like svg {
+  font-size: 1.15em;
+}
+
+/* —— Related posts —— */
+.specific-related {
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(20, 25, 40, 0.08);
+}
+
+.specific-related__title {
+  font-family: "Montserrat", serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  color: #12151c;
+  text-align: center;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.specific-related__grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.specific-related__grid .inner-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(20, 25, 40, 0.08);
+  box-shadow: 0 12px 36px rgba(15, 20, 35, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.specific-related__grid .inner-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(15, 20, 35, 0.1);
+}
+
+.specific-related__grid .inner-card img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.specific-related__grid .card-heading {
+  padding: 0.85rem 1rem 0.25rem;
+  font-family: "Montserrat", serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #1a1f2e;
+}
+
+.specific-related__grid .card-detail {
+  padding: 0 1rem 1rem;
+  font-size: 0.82rem;
+  color: #6b7280;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.specific-related__grid .like-home {
+  margin-left: auto;
+  color: #3444bc;
+  font-weight: 700;
+}
+
+button.wishlist-bookmark-trigger {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  margin: 1rem;
+  margin-top: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  line-height: 0;
+}
+
+button.wishlist-bookmark-trigger .bookmark-icon {
+  position: static;
+  margin: 0;
+  font-size: xx-large;
+  color: white;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+@media (max-width: 600px) {
+  .specific-article {
+    padding-top: 1.25rem;
   }
-  
-  /* Heading style */
-  .specific-container h2 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 20px;
-  }
-  
-  /* Blog image styling */
-  .specific-container img {
-    width: 100%;
-    height: 30rem;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    object-fit: cover;
-  }
-  
-  /* Paragraph for blog content */
-  .specific-container p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: black;
-    text-align: justify;
-    margin-bottom: 30px;
-  }
-  
-  /* Like button styling */
-  .like {
-    display: flex;
-    align-items: center;
-    
-   
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
- 
-  
-  .like svg {
-    margin-right: 8px;
-  }
-  
-  /* Loading message */
-  .specific-container p {
-    font-size: 1.2rem;
- 
-    /* text-align: center; */
-    margin-top: 50px;
-  }
-  
-  /* Small Screen Adjustments */
-  @media (max-width: 600px) {
-    .specific-container {
-      padding: 15px;
-    }
-  
-    .specific-container h2 {
-      font-size: 2rem;
-    }
-  
-    .like {
-      font-size: 1rem;
-      padding: 8px 16px;
-    }
-  }
-  
+}
