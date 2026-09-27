@@ -124,7 +124,7 @@ const Home = React.memo(() => {
         >
           <div className="offcanvas-header navbar-chronic__drawer-header">
             <div>
-              <p className="navbar-chronic__drawer-kicker">Chronic</p>
+              <p className="navbar-chronic__drawer-kicker">samit</p>
               <h2
                 className="offcanvas-title text-white h5 mb-0"
                 id="offcanvasExampleLabel"
@@ -197,7 +197,7 @@ const Home = React.memo(() => {
                     <FaXTwitter />
                   </div>
                   <div className=" col-md-4 nav-heading">
-                    <h1>CHRONIC</h1>
+                    <h1>samit</h1>
                     <p>Blogs &amp; magazine</p>
                   </div>
                   <div className=" col-md-4 nav-account-whislist">
