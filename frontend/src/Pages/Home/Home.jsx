@@ -197,7 +197,7 @@ const Home = React.memo(() => {
                     <FaXTwitter />
                   </div>
                   <div className=" col-md-4 nav-heading">
-                    <h1>samit</h1>
+                    <h1>CHRONIC</h1>
                     <p>Blogs &amp; magazine</p>
                   </div>
                   <div className=" col-md-4 nav-account-whislist">
