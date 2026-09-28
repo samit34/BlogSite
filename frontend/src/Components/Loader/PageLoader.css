@@ -8,7 +8,7 @@
 
 .page-loader--fullscreen {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fafbfc 0%, #eef0f6 100%);
+  background: #f3efe6;
 }
 
 .page-loader--section {
@@ -29,7 +29,7 @@
   width: 48px;
   height: 48px;
   border: 3px solid rgba(52, 68, 188, 0.12);
-  border-top-color: #3444bc;
+  border-top-color: #1c1914;
   border-radius: 50%;
   animation: page-loader-spin 0.72s linear infinite;
 }

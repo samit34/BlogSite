@@ -1,4 +1,4 @@
-/* Home page layout & cards — Chronic (#3444bc, Montserrat) */
+/* Home page layout & cards — Chronic (#1c1914, Montserrat) */
 
 .home-nav-shell .nav-heading p {
   font-size: 0.9rem;
@@ -16,11 +16,11 @@
 }
 
 .home-nav-link:hover {
-  color: #3444bc;
+  color: #1c1914;
 }
 
 .home-page {
-  background: linear-gradient(180deg, #f4f6fb 0%, #fafbfd 40%, #ffffff 100%);
+  background: #f3efe6;
   padding: 0 0 3rem;
   min-height: 50vh;
 }
@@ -40,15 +40,15 @@
   font-size: 0.72rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: #3444bc;
+  color: #1c1914;
   font-weight: 700;
   margin: 0 0 0.5rem;
 }
 
 .home-page__title {
-  font-family: "Montserrat", serif;
-  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
-  font-weight: 800;
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 500;
   color: #12151c;
   margin: 0 0 0.5rem;
   letter-spacing: -0.02em;
@@ -75,11 +75,11 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
+  border-radius: 2px;
   overflow: hidden;
-  background: #fff;
-  border: 1px solid rgba(20, 25, 40, 0.08);
-  box-shadow: 0 12px 40px rgba(15, 20, 35, 0.06);
+  background: #fffcf7;
+  border: 1px solid rgba(28, 25, 20, 0.1);
+  box-shadow: none;
   transition: transform 0.35s ease, box-shadow 0.35s ease,
     border-color 0.35s ease;
 }
@@ -158,13 +158,13 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 700;
-  color: #3444bc;
+  color: #1c1914;
 }
 
 .home-card__title {
-  font-family: "Montserrat", serif;
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-family: "Fraunces", serif;
+  font-size: 1.15rem;
+  font-weight: 500;
   line-height: 1.35;
   color: #1a1f2e;
   display: -webkit-box;
@@ -180,7 +180,7 @@
 .home-card__read {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #3444bc;
+  color: #1c1914;
   margin-top: auto;
   padding-top: 0.35rem;
 }
@@ -206,7 +206,7 @@
   border: none;
   border-radius: 999px;
   background: rgba(52, 68, 188, 0.08);
-  color: #3444bc;
+  color: #1c1914;
   font-weight: 700;
   font-size: 0.82rem;
   cursor: pointer;
@@ -234,16 +234,16 @@
   position: sticky;
   top: 0rem;
   padding: 1.35rem 1.25rem;
-  border-radius: 16px;
-  background: #fff;
-  border: 1px solid rgba(20, 25, 40, 0.08);
-  box-shadow: 0 14px 40px rgba(15, 20, 35, 0.06);
+  border-radius: 2px;
+  background: #fffcf7;
+  border: 1px solid rgba(28, 25, 20, 0.1);
+  box-shadow: none;
 }
 
 .home-latest__heading {
-  font-family: "Montserrat", serif;
-  font-size: 1.35rem;
-  font-weight: 800;
+  font-family: "Fraunces", serif;
+  font-size: 1.45rem;
+  font-weight: 500;
   color: #12151c;
   margin: 0;
   letter-spacing: -0.02em;
@@ -305,7 +305,7 @@
   border: none;
   border-radius: 999px;
   background: rgba(52, 68, 188, 0.1);
-  color: #3444bc;
+  color: #1c1914;
   font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
@@ -342,7 +342,7 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 700;
-  color: #3444bc;
+  color: #1c1914;
   margin-bottom: 0.25rem;
 }
 
@@ -367,7 +367,7 @@
   margin-top: 1rem;
   font-size: 0.88rem;
   font-weight: 700;
-  color: #3444bc;
+  color: #1c1914;
   text-decoration: none;
 }
 

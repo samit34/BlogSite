@@ -2,6 +2,7 @@ import React from "react";
 import "./Footer.css";
 import { Link } from "react-router-dom";
 import { ScrollRevealWide } from "../motion/ScrollReveal";
+import BrandLogo from "../BrandLogo/BrandLogo";
 
 const Footer = () => {
   return (
@@ -12,7 +13,7 @@ const Footer = () => {
             <div className="container">
               <div className="row footer-grid">
                 <div className="col-lg-4 col-md-6 footer-col footer-col--brand">
-                  <p className="footer-kicker">Chronic</p>
+                  <BrandLogo invert size="lg" withTagline={false} to="/" />
                   <h2 className="footer-heading">Get in touch</h2>
                   <p className="footer-text">Mohali, Punjab — Sector 8B</p>
                   <p className="footer-text">
@@ -45,7 +46,7 @@ const Footer = () => {
                 </div>
 
                 <div className="col-lg-3 col-md-6 footer-col">
-                  <h3 className="footer-subheading">About Chronic</h3>
+                  <h3 className="footer-subheading">About the magazine</h3>
                   <p className="footer-blurb">
                     Stories, essays, and magazine-style features—one place to
                     read, save favorites, and share what matters. Built as a

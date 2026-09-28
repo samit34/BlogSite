@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useToast } from "../../Components/Toast/ToastProvider";
 import ConfirmDialog from "../../Components/ConfirmDialog/ConfirmDialog";
 import EmptyState from "../../Components/EmptyState/EmptyState";
+import PageLoader from "../../Components/Loader/PageLoader";
 
 const Superadmin = () => {
   const { showToast } = useToast();
@@ -32,7 +33,7 @@ const Superadmin = () => {
   };
 
   //   all blog
-  const { fetchBlogs, blog } = useBlog();
+  const { fetchBlogs, blog, blogsLoading } = useBlog();
 
   useEffect(() => {
     fetchBlogs();
@@ -278,7 +279,9 @@ const Superadmin = () => {
 
           <div className="allblog-none" ref={blogRef}>
             <div className="col-md-12 blog-inner-container  ">
-              {blog.length > 0 ? (
+              {blogsLoading && blog.length === 0 ? (
+                <PageLoader variant="stories" />
+              ) : blog.length > 0 ? (
                 blog.map((blog, index) => {
                   return (
                     <div

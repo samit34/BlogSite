@@ -10,6 +10,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import { useToast } from "../../Components/Toast/ToastProvider";
 import { getApiErrorMessage } from "../../utils/apiErrorMessage";
+import BrandLogo from "../../Components/BrandLogo/BrandLogo";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -67,7 +68,7 @@ const Login = () => {
     <main className="auth-page">
       <div className="auth-shell">
         <div className="auth-card">
-          <p className="auth-kicker">Chronic</p>
+          <BrandLogo size="sm" className="auth-brand" />
           <h1 className="auth-title">Welcome back</h1>
           <p className="auth-lede">
             Sign in with your <strong>username</strong> or{" "}

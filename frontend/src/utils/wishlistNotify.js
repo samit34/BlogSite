@@ -2,6 +2,7 @@ export async function addToWishlistWithToast(api, id, showToast) {
   try {
     await api.post("/user/wishlist", { id });
     showToast("Saved to your wishlist.", "success");
+    return true;
   } catch (err) {
     if (err.response?.status === 409) {
       showToast(
@@ -9,12 +10,13 @@ export async function addToWishlistWithToast(api, id, showToast) {
           "This post is already in your wishlist.",
         "info"
       );
-    } else {
-      showToast(
-        err.response?.data?.message || "Could not save to your wishlist.",
-        "error"
-      );
+      return true;
     }
+    showToast(
+      err.response?.data?.message || "Could not save to your wishlist.",
+      "error"
+    );
+    return false;
   }
 }
 

@@ -29,14 +29,14 @@
   letter-spacing: 0.32em;
   text-transform: uppercase;
   font-weight: 700;
-  color: #3444bc;
+  color: #1c1914;
   margin-bottom: 0.75rem;
 }
 
 .specific-article__title {
-  font-family: "Montserrat", serif;
-  font-size: clamp(1.85rem, 4vw, 2.65rem);
-  font-weight: 800;
+  font-family: "Fraunces", serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 500;
   line-height: 1.15;
   color: #12151c;
   margin: 0 0 0.85rem;
@@ -109,7 +109,7 @@
 }
 
 .specific-article__body a {
-  color: #3444bc;
+  color: #1c1914;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -124,7 +124,7 @@
 .specific-article__body blockquote {
   margin: 1.25em 0;
   padding: 0.85rem 1.1rem;
-  border-left: 4px solid #3444bc;
+  border-left: 4px solid #1c1914;
   background: rgba(52, 68, 188, 0.06);
   color: #3d4654;
 }
@@ -229,7 +229,7 @@
 
 .specific-related__grid .like-home {
   margin-left: auto;
-  color: #3444bc;
+  color: #1c1914;
   font-weight: 700;
 }
 

@@ -11,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import { Link, Navigate } from "react-router-dom";
 import { useToast } from "../../Components/Toast/ToastProvider";
 import { getApiErrorMessage } from "../../utils/apiErrorMessage";
+import BrandLogo from "../../Components/BrandLogo/BrandLogo";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -67,7 +68,7 @@ const Signup = () => {
     <main className="auth-page">
       <div className="auth-shell auth-shell--wide">
         <div className="auth-card">
-          <p className="auth-kicker">Chronic</p>
+          <BrandLogo size="sm" className="auth-brand" />
           <h1 className="auth-title">Create an account</h1>
           <p className="auth-lede">
             Join <strong>Chronic</strong> to read and share stories.

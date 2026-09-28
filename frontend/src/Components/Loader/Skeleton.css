@@ -1,0 +1,300 @@
+.sk {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    #e8e2d4 0%,
+    #faf7f0 45%,
+    #e8e2d4 100%
+  );
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.35s ease-in-out infinite;
+}
+
+.sk--fill {
+  width: 100%;
+  height: 100%;
+}
+
+.sk--line {
+  height: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.65rem;
+}
+
+.sk--title {
+  height: 1.35rem;
+  width: 78%;
+  margin: 0.55rem 0 0.85rem;
+}
+
+.sk--display {
+  height: 2.4rem;
+  width: 70%;
+  margin: 0.5rem 0 1rem;
+}
+
+.sk--w-24 {
+  width: 24%;
+}
+.sk--w-32 {
+  width: 32%;
+}
+.sk--w-40 {
+  width: 40%;
+}
+.sk--w-56 {
+  width: 56%;
+}
+.sk--w-72 {
+  width: 72%;
+}
+.sk--w-80 {
+  width: 80%;
+}
+
+.sk--pill {
+  width: 4.5rem;
+  height: 2.2rem;
+  border-radius: 999px;
+}
+
+.sk--pill-lg {
+  width: 8.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  margin-top: 0.5rem;
+}
+
+.sk--pill-full {
+  width: 100%;
+  height: 2.4rem;
+  border-radius: 999px;
+  margin-top: 0.75rem;
+}
+
+.sk--circle {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+}
+
+.sk--avatar {
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sk--field {
+  height: 2.8rem;
+  margin-bottom: 0.85rem;
+}
+
+.sk--area {
+  height: 8rem;
+  margin-bottom: 1rem;
+}
+
+@keyframes sk-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.sk-archive {
+  display: flex;
+  flex-direction: column;
+}
+
+.sk-story {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(28, 25, 20, 0.12);
+}
+
+.sk-story__media {
+  aspect-ratio: 16 / 10;
+  background: #ddd6c8;
+  overflow: hidden;
+}
+
+.sk-story__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sk-story__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.sk-account__banner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+  margin: 1.5rem 0 2rem;
+  background: #1c1914;
+}
+
+.sk-account__banner .sk {
+  background: linear-gradient(
+    90deg,
+    #2a2620 0%,
+    #3a352e 45%,
+    #2a2620 100%
+  );
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.35s ease-in-out infinite;
+}
+
+.sk-account__banner-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.sk-account__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.sk-card {
+  border: 1px solid rgba(28, 25, 20, 0.12);
+  background: #fffcf7;
+}
+
+.sk-card__media {
+  height: 12rem;
+  overflow: hidden;
+}
+
+.sk-card__body {
+  padding: 1rem;
+}
+
+.sk-article {
+  max-width: 42rem;
+  margin: 2rem auto 4rem;
+  padding: 0 1rem;
+}
+
+.sk-article__figure {
+  aspect-ratio: 16 / 9;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  background: #ddd6c8;
+}
+
+.sk-home {
+  width: min(1100px, calc(100% - 2.5rem));
+  margin: 0 auto 3rem;
+  padding-top: 2rem;
+}
+
+.sk-home__hero-media {
+  aspect-ratio: 16 / 8;
+  margin-top: 1rem;
+  overflow: hidden;
+  background: #ddd6c8;
+}
+
+.sk-home__latest {
+  margin-top: 2.5rem;
+}
+
+.sk-latest-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-top: 1px solid rgba(28, 25, 20, 0.12);
+}
+
+.sk-latest-row__thumb {
+  height: 5rem;
+  overflow: hidden;
+  background: #ddd6c8;
+}
+
+.sk-auth {
+  min-height: 100vh;
+  background: #f3efe6;
+}
+
+.sk-auth__bar {
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: #faf7f0;
+  border-bottom: 1px solid rgba(28, 25, 20, 0.1);
+}
+
+.sk-auth__body {
+  width: min(1080px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2.5rem 0 4rem;
+}
+
+.sk-auth__block {
+  aspect-ratio: 16 / 7;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  background: #ddd6c8;
+}
+
+.sk-form {
+  max-width: 46rem;
+  padding: 3rem 0 4rem;
+}
+
+.sk-form__field {
+  aspect-ratio: 16 / 9;
+  margin: 1rem 0 1.5rem;
+  overflow: hidden;
+  background: #ddd6c8;
+}
+
+.sk-page {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .sk-story {
+    grid-template-columns: 0.42fr 0.58fr;
+    gap: 2.25rem;
+    padding: 2.75rem 0;
+    align-items: center;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sk-account__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .sk-account__banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sk-account__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk,
+  .sk-account__banner .sk {
+    animation: none;
+    background: #e8e2d4;
+  }
+}

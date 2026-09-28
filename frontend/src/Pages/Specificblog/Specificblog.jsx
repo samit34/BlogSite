@@ -8,21 +8,19 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api, { API_BASE_URL } from '../../api/client';
 import DOMPurify from 'dompurify';
-import { AiFillLike } from "react-icons/ai";
-import { FaBookmark } from "react-icons/fa";
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/footer/Footer';
 import './Specificblog.css';
+import LikeButton from '../../Components/editorial/LikeButton';
+import SaveButton from '../../Components/editorial/SaveButton';
 import { useBlog } from '../Blogcontext';
 import { ScrollReveal, ScrollRevealWide } from '../../Components/motion/ScrollReveal';
 import EmptyState from '../../Components/EmptyState/EmptyState';
 import PageLoader from '../../Components/Loader/PageLoader';
-import { useToast } from '../../Components/Toast/ToastProvider';
-import { addToWishlistWithToast } from '../../utils/wishlistNotify';
+import { userHasLiked } from '../../utils/currentUser';
 
 const Specificblog = () => {
-  const { handleLike, blog } = useBlog();
-  const { showToast } = useToast();
+  const { handleLike, toggleWishlist, isWished, blog } = useBlog();
   const { id } = useParams();
   const [sblog, setBlog] = useState(null);
   const [error, setError] = useState(null);
@@ -51,14 +49,11 @@ const Specificblog = () => {
   }, [oneblog]);
 
   const runagain = async () => {
-    if (sblog) {
-      await handleLike(sblog._id);
-      oneblog();
+    if (!sblog) return;
+    const liked = await handleLike(sblog._id);
+    if (liked) {
+      setBlog((prev) => (prev ? { ...prev, liked } : prev));
     }
-  };
-
-  const wishlist = (id) => {
-    addToWishlistWithToast(api, id, showToast);
   };
 
  
@@ -71,7 +66,7 @@ const Specificblog = () => {
         {error && <p className="specificblog-error">{error}</p>}
 
         {pending ? (
-          <PageLoader message="Loading article" />
+          <PageLoader message="Loading article" variant="article" />
         ) : sblog ? (
           <ScrollRevealWide>
             <article className="specific-article">
@@ -119,9 +114,11 @@ const Specificblog = () => {
               />
 
               <div className="specific-article__actions">
-                <button type="button" className="like" onClick={runagain}>
-                  <AiFillLike /> {sblog.liked.length}
-                </button>
+                <LikeButton
+                  count={sblog.liked?.length}
+                  active={userHasLiked(sblog.liked)}
+                  onClick={runagain}
+                />
               </div>
             </article>
           </ScrollRevealWide>
@@ -148,14 +145,11 @@ const Specificblog = () => {
                 delay={Math.min(index * 0.08, 0.4)}
               >
                 <div className="inner-card">
-                  <button
-                    type="button"
+                  <SaveButton
                     className="wishlist-bookmark-trigger"
-                    onClick={() => wishlist(b._id)}
-                    aria-label="Save to wishlist"
-                  >
-                    <FaBookmark className="bookmark-icon" />
-                  </button>
+                    active={isWished(b._id)}
+                    onClick={() => toggleWishlist(b._id)}
+                  />
                   <Link to={`/layout/specificblog/${b._id}`}>
                     <img
                       src={`${API_BASE_URL}/uploads/${b.image}`}
@@ -171,12 +165,11 @@ const Specificblog = () => {
                   <div className="card-detail">
                     <p>Post By {b.username}</p>
                     <p>{new Date(parseInt(b.date)).toLocaleDateString()}</p>
-                    <button
-                      className="like-home"
+                    <LikeButton
+                      count={b.liked?.length}
+                      active={userHasLiked(b.liked)}
                       onClick={() => handleLike(b._id)}
-                    >
-                      <AiFillLike /> {b.liked.length}
-                    </button>
+                    />
                   </div>
                 </div>
               </ScrollReveal>

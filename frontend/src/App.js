@@ -14,12 +14,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Blog from "./Pages/Blog/Blog";
 import { ToastProvider } from "./Components/Toast/ToastProvider";
+import ScrollToTop from "./Components/ScrollToTop";
 
 function App() {
   console.log("the app.js is re-render ");
 
   return (
     <Router>
+      <ScrollToTop />
       <ToastProvider>
         <AuthProvider>
           <BlogContextProvider>

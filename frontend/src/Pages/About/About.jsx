@@ -1,111 +1,127 @@
 import React from "react";
 import "./About.css";
-import { ScrollReveal, ScrollRevealWide } from "../../Components/motion/ScrollReveal";
-import { FaPenFancy, FaCompass, FaUsers, FaHeart } from "react-icons/fa";
+import "../../Components/editorial/editorial.css";
+import { motion } from "motion/react";
+import { FaPenFancy, FaCompass, FaUsers } from "react-icons/fa";
 
 const About = () => {
   const features = [
     {
       icon: <FaPenFancy aria-hidden />,
       title: "Stories & columns",
-      text: "Long reads, quick takes, and photo-led pieces—tagged by category so every issue of your feed feels intentional.",
+      text: "Long reads, quick takes, and photo-led pieces—tagged so every issue of your feed feels intentional.",
     },
     {
       icon: <FaCompass aria-hidden />,
       title: "Wander the stacks",
-      text: "From culture and design to travel notes and weekend lists—browse by mood, save what resonates, and circle back anytime.",
+      text: "From culture and design to travel notes—browse by mood, save what resonates, and circle back anytime.",
     },
     {
       icon: <FaUsers aria-hidden />,
       title: "Readers in mind",
-      text: "Likes and wishlists keep your magazine rack personal; quiet typography and layout keep the focus on the words.",
+      text: "Likes and wishlists keep your magazine rack personal. Quiet type keeps the focus on the words.",
     },
   ];
 
   return (
     <div className="about-page">
-      <section className="about-hero">
-        <div className="about-hero__bg" aria-hidden />
-        <div className="container about-hero__inner">
-          <ScrollRevealWide>
-            <p className="about-hero__eyebrow">Magazine &amp; blogs</p>
-            <h1 className="about-hero__title">About Chronic</h1>
-            <p className="about-hero__lead">
-              An independent online magazine for curious readers—essay-length features,
-              bite-sized posts, and everything in between, served in a calm, print-inspired layout.
-            </p>
-          </ScrollRevealWide>
+      <section className="sq-about-hero">
+        <img src="/editorial/about-hero.jpg" alt="" />
+        <div className="sq-about-hero__veil" aria-hidden />
+        <div className="sq-about-hero__inner">
+          <p className="sq-kicker" style={{ color: "rgba(250,247,240,0.75)" }}>
+            The magazine
+          </p>
+          <motion.h1
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            About this desk
+          </motion.h1>
+          <motion.p
+            initial={{ y: 24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          >
+            An independent online magazine for curious readers—essay-length
+            features, photography, and everything in between, served in a calm,
+            print-inspired layout.
+          </motion.p>
         </div>
       </section>
 
-      <div className="container about-body">
-        <ScrollReveal>
-          <section className="about-section about-intro">
-            <h2 className="about-section__title">Our editorial note</h2>
-            <p className="about-intro__text">
-              Chronic started as a small idea: what if a blog felt less like a feed and
-              more like flipping through a weekend magazine? We mix essays, interviews,
-              field notes, and illustrated stories—always with room for new voices and odd angles.
-            </p>
-            <p className="about-intro__text">
-              Whether you are here for slow Sunday reads or five-minute coffee-break posts,
-              we hope you find something worth bookmarking—and maybe something worth sharing
-              at the dinner table.
-            </p>
-          </section>
-        </ScrollReveal>
+      <section className="sq-about-split">
+        <motion.img
+          src="/editorial/studio.jpg"
+          alt=""
+          initial={{ opacity: 0, scale: 1.04 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 1 }}
+        />
+        <div className="sq-about-split__copy">
+          <p className="sq-kicker">Editorial note</p>
+          <h2>Less like a feed. More like a weekend magazine.</h2>
+          <p>
+            Samit started with a simple question: what if a blog felt like
+            flipping through something you would leave on a coffee table? We mix
+            essays, interviews, field notes, and illustrated stories—always with
+            room for new voices and odd angles.
+          </p>
+          <p>
+            Whether you are here for a slow Sunday or a five-minute coffee
+            break, we hope you find something worth bookmarking.
+          </p>
+        </div>
+      </section>
 
-        <ScrollRevealWide>
-          <section className="about-section">
-            <h2 className="about-section__title">Inside the issue</h2>
-            <div className="about-features">
-              {features.map((f, i) => (
-                <ScrollReveal key={f.title} className="about-feature-card" delay={i * 0.08}>
-                  <div className="about-feature-card__icon">{f.icon}</div>
-                  <h3 className="about-feature-card__title">{f.title}</h3>
-                  <p className="about-feature-card__text">{f.text}</p>
-                </ScrollReveal>
-              ))}
-            </div>
-          </section>
-        </ScrollRevealWide>
+      <section className="sq-about-stats" aria-label="Magazine in numbers">
+        {[
+          ["12+", "issues in motion"],
+          ["40+", "voices commissioned"],
+          ["1", "desk, many rooms"],
+          ["∞", "afternoons to read"],
+        ].map(([n, l]) => (
+          <div key={l}>
+            <span>{n}</span>
+            <p>{l}</p>
+          </div>
+        ))}
+      </section>
 
-        {/* Optional stack section (no icon imports required if uncommented):
-        <ScrollReveal>
-          <section className="about-section about-stack">...</section>
-        </ScrollReveal>
-        */}
+      <section className="sq-about-features">
+        {features.map((f, i) => (
+          <motion.article
+            key={f.title}
+            className="sq-about-feature"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.08, duration: 0.55 }}
+          >
+            <div className="about-feature-card__icon">{f.icon}</div>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </motion.article>
+        ))}
+      </section>
 
-        <ScrollRevealWide>
-          <section className="about-author">
-            <div className="about-author__card">
-              <div className="about-author__accent" aria-hidden />
-              <div className="about-author__content">
-                <p className="about-author__label">Editorial</p>
-                <h2 className="about-author__name">The Chronic desk</h2>
-                <p className="about-author__bio">
-                  A rotating crew of editors, contributors, and guest writers keeps Chronic
-                  stocked with fresh threads—fiction sketches, city guides, opinion pieces,
-                  and the occasional rant we probably should have cut (but didn&apos;t).
-                  Pull up a chair; the next story is almost ready.
-                </p>
-                <div className="about-author__heart">
-                  <FaHeart aria-hidden /> <span>Made with care for readers &amp; writers</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </ScrollRevealWide>
-
-        <ScrollReveal>
-          <section className="about-outro">
-            <p>
-              Thanks for reading Chronic. Wander the archive, stash pieces in your wishlist,
-              and come back when you need a good story—there is always another page to turn.
-            </p>
-          </section>
-        </ScrollReveal>
-      </div>
+      <section className="sq-about-desk">
+        <img src="/editorial/portrait.jpg" alt="" />
+        <div className="sq-about-desk__copy">
+          <p className="sq-kicker" style={{ color: "rgba(250,247,240,0.55)" }}>
+            Editorial
+          </p>
+          <h2>The Samit desk</h2>
+          <p>
+            A rotating crew of editors, contributors, and guest writers keeps
+            the shelves stocked—fiction sketches, city guides, opinion pieces,
+            and the occasional rant we probably should have cut. Pull up a
+            chair; the next story is almost ready.
+          </p>
+        </div>
+      </section>
     </div>
   );
 };

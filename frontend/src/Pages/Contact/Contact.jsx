@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import api from "../../api/client";
 import "./Contact.css";
-import samit from "../../images/blog.webp";
-import { ScrollReveal, ScrollRevealWide } from "../../Components/motion/ScrollReveal";
+import "../../Components/editorial/editorial.css";
+import { ScrollReveal } from "../../Components/motion/ScrollReveal";
+import { motion } from "motion/react";
 import { FaEnvelope, FaPaperPlane, FaPhone } from "react-icons/fa";
+import { useToast } from "../../Components/Toast/ToastProvider";
 
 /** Display-only placeholders (not real contact details). */
 const CONTACT_DISPLAY = {
-  email: "hegrag@chronicmagazine.studio",
+  email: "hello@chronicmagazine.studio",
   emailHref: "mailto:hello@chronicmagazine.studio",
   phone: "+1 (555) 284-0193",
   phoneHref: "tel:+15552840193",
@@ -15,16 +17,15 @@ const CONTACT_DISPLAY = {
 };
 
 const Contact = () => {
+  const { showToast } = useToast();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
-  const [feedback, setFeedback] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFeedback(null);
     setSending(true);
 
     const formData = { firstName, lastName, email, message };
@@ -32,20 +33,20 @@ const Contact = () => {
     try {
       const response = await api.post("/user/email", formData);
       if (response.status === 200) {
-        setFeedback({ type: "success", text: "Thanks! Your message was sent successfully." });
+        showToast("Message sent. Thank you.", "success");
         setFirstName("");
         setLastName("");
         setEmail("");
         setMessage("");
       } else {
-        setFeedback({ type: "error", text: "Something went wrong. Please try again." });
+        showToast("Something went wrong. Please try again.", "error");
       }
     } catch (error) {
       console.error("Error:", error);
-      setFeedback({
-        type: "error",
-        text: "Could not send your message. Check your connection and try again.",
-      });
+      showToast(
+        "Could not send your message. Check your connection and try again.",
+        "error"
+      );
     } finally {
       setSending(false);
     }
@@ -53,64 +54,75 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      <section className="contact-hero">
-        <div className="contact-hero__bg" aria-hidden />
-        <div className="container contact-hero__inner">
-          <ScrollRevealWide>
-            <p className="contact-hero__eyebrow">We&apos;d love to hear from you</p>
-            <h1 className="contact-hero__title">Get in touch</h1>
-            <p className="contact-hero__lead">
-              Questions, ideas, or feedback—send a note and we&apos;ll get back when we can.
-            </p>
-          </ScrollRevealWide>
+      <section className="sq-about-hero">
+        <img src="/editorial/desk.jpg" alt="" />
+        <div className="sq-about-hero__veil" aria-hidden />
+        <div className="sq-about-hero__inner">
+          <p className="sq-kicker" style={{ color: "rgba(250,247,240,0.75)" }}>
+            Letters
+          </p>
+          <motion.h1
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Get in touch
+          </motion.h1>
+          <motion.p
+            initial={{ y: 24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Questions, pitches, or a quiet note—send a letter and we will write
+            back when we can.
+          </motion.p>
         </div>
       </section>
 
-      <div className="container contact-layout">
-        <ScrollRevealWide className="contact-visual">
-          <div className="contact-visual__frame">
-            <img
-              src={samit}
-              alt=""
-              className="contact-visual__img"
-            />
-            <div className="contact-visual__overlay" aria-hidden />
-          </div>
-          <div className="contact-aside">
-            <h2 className="contact-aside__title">Direct lines</h2>
-            <ul className="contact-aside__list">
-              <li>
-                <FaEnvelope aria-hidden className="contact-aside__icon" />
-                <a href={CONTACT_DISPLAY.emailHref}>{CONTACT_DISPLAY.email}</a>
-              </li>
-              <li>
-                <FaPhone aria-hidden className="contact-aside__icon" />
-                <a href={CONTACT_DISPLAY.phoneHref}>{CONTACT_DISPLAY.phone}</a>
-              </li>
-            </ul>
-            <p className="contact-aside__note">{CONTACT_DISPLAY.address}</p>
-          </div>
-        </ScrollRevealWide>
+      <section className="sq-about-split">
+        <motion.img
+          src="/editorial/studio.jpg"
+          alt=""
+          initial={{ opacity: 0, scale: 1.04 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 1 }}
+        />
+        <div className="sq-about-split__copy">
+          <p className="sq-kicker">Direct lines</p>
+          <h2>The desk is open.</h2>
+          <p>
+            For story ideas, corrections, or partnerships, use the form below or
+            reach the studio on these lines.
+          </p>
+          <ul className="contact-lines">
+            <li>
+              <FaEnvelope aria-hidden />
+              <a href={CONTACT_DISPLAY.emailHref}>{CONTACT_DISPLAY.email}</a>
+            </li>
+            <li>
+              <FaPhone aria-hidden />
+              <a href={CONTACT_DISPLAY.phoneHref}>{CONTACT_DISPLAY.phone}</a>
+            </li>
+          </ul>
+          <p className="contact-address">{CONTACT_DISPLAY.address}</p>
+        </div>
+      </section>
 
-        <ScrollReveal className="contact-form-wrap">
-          <div className="contact-form-card">
-            <h2 className="contact-form-card__title">Send a message</h2>
-            <p className="contact-form-card__subtitle">
-              All fields are required. We read every message.
-            </p>
-
-            {feedback && (
-              <div
-                className={`contact-feedback contact-feedback--${feedback.type}`}
-                role="alert"
-              >
-                {feedback.text}
-              </div>
-            )}
+      <div className="contact-page__form-wrap">
+        <div className="container contact-page__inner">
+          <ScrollReveal>
+            <header className="contact-page__hero">
+              <p className="contact-page__kicker">Write to us</p>
+              <h2 className="contact-page__title">Send a message</h2>
+              <p className="contact-page__lede">
+                All fields are required. We read every note that arrives.
+              </p>
+            </header>
 
             <form className="contact-form" onSubmit={handleSubmit} noValidate>
               <label htmlFor="first-name" className="contact-label">
-                Name <span className="contact-required">*</span>
+                Name
               </label>
               <div className="contact-name-row">
                 <input
@@ -136,7 +148,7 @@ const Contact = () => {
               </div>
 
               <label htmlFor="email" className="contact-label">
-                Email <span className="contact-required">*</span>
+                Email
               </label>
               <input
                 type="email"
@@ -150,7 +162,7 @@ const Contact = () => {
               />
 
               <label htmlFor="message" className="contact-label">
-                Message <span className="contact-required">*</span>
+                Message
               </label>
               <textarea
                 id="message"
@@ -159,7 +171,7 @@ const Contact = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
-                rows={5}
+                rows={6}
               />
 
               <button
@@ -176,8 +188,8 @@ const Contact = () => {
                 )}
               </button>
             </form>
-          </div>
-        </ScrollReveal>
+          </ScrollReveal>
+        </div>
       </div>
     </div>
   );

@@ -17,9 +17,15 @@ import { VscAccount } from "react-icons/vsc";
 import { PiHandbagLight } from "react-icons/pi";
 import { HiBars3BottomLeft } from "react-icons/hi2";
 import { useAuth } from "../../Pages/Authcontext";
+import { useNavScroll, useElementHeight } from "../../hooks/useNavScroll";
+import BrandLogo from "../BrandLogo/BrandLogo";
 
 const Navbar = ({ setSerach = () => {}, serach = "" }) => {
   const serachref = useRef();
+  const barRef = useRef(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const hidden = useNavScroll({ locked: searchOpen });
+  const barHeight = useElementHeight(barRef);
   const homeRef = useRef();
   const contactRef = useRef();
   const blogsRef = useRef();
@@ -48,8 +54,12 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
   };
 
   const showserach = () => {
-    serachref.current.classList.toggle("active-serach");
+    setSearchOpen((open) => !open);
   };
+
+  useEffect(() => {
+    serachref.current?.classList.toggle("active-serach", searchOpen);
+  }, [searchOpen]);
 
   useEffect(() => {
     api
@@ -63,24 +73,20 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
   }, []);
 
   return (
-    <nav className="navbar-chronic" aria-label="Main">
+    <>
+    <nav
+      className={`navbar-chronic${hidden ? " navbar-chronic--hidden" : ""}`}
+      aria-label="Main"
+    >
       <div
         className="offcanvas offcanvas-start"
         tabIndex={-1}
         id="offcanvasExample"
         aria-labelledby="offcanvasExampleLabel"
       >
-        <div className="offcanvas-header navbar-chronic__drawer-header">
-          <div>
-            <p className="navbar-chronic__drawer-kicker">Chronic</p>
-            <h2
-              className="offcanvas-title text-white h5 mb-0"
-              id="offcanvasExampleLabel"
-            >
-              Menu
-            </h2>
-          </div>
-          <button
+          <div className="offcanvas-header navbar-chronic__drawer-header">
+            <BrandLogo invert withTagline={false} size="sm" />
+            <button
             type="button"
             className="btn-close btn-close-white"
             data-bs-dismiss="offcanvas"
@@ -133,7 +139,7 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
         </div>
       </div>
 
-      <div className="nav-main-con">
+      <div className="nav-main-con" ref={barRef}>
         <div className="inner-main-container">
           <div className="container nav-container">
             <div className="nav-heading-inner">
@@ -146,8 +152,7 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
                 </div>
 
                 <div className="col-md-4 nav-heading">
-                  <h1>chronic</h1>
-                  <p>Blogs &amp; magazine</p>
+                  <BrandLogo />
                 </div>
 
                 <div className="col-md-4 nav-account-whislist">
@@ -272,6 +277,12 @@ const Navbar = ({ setSerach = () => {}, serach = "" }) => {
         </div>
       </div>
     </nav>
+    <div
+      className="navbar-chronic__spacer"
+      style={{ height: barHeight ? `${barHeight}px` : undefined }}
+      aria-hidden
+    />
+    </>
   );
 };
 

@@ -1,0 +1,213 @@
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: #1c1914;
+  line-height: 1;
+  padding: 4px;
+}
+
+.brand-logo:hover {
+  color: #1c1914;
+}
+
+.brand-logo__mark {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.85rem;
+  height: 2.85rem;
+  display: grid;
+  place-items: center;
+  background: #1c1914;
+  color: #faf7f0;
+  outline: 1px solid #1c1914;
+  outline-offset: 3px;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.brand-logo__mark::before,
+.brand-logo__mark::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.brand-logo__mark::before {
+  inset: 0;
+  box-shadow:
+    inset 5px 0 0 -4px #c4a574,
+    inset -5px 0 0 -4px #c4a574,
+    inset 0 5px 0 -4px #c4a574,
+    inset 0 -5px 0 -4px #c4a574;
+}
+
+.brand-logo__mark::after {
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 3px;
+  background: #c4a574;
+}
+
+.brand-logo:hover .brand-logo__mark {
+  transform: translateY(-1px);
+}
+
+.brand-logo__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  border: 1px solid rgba(250, 247, 240, 0.28);
+}
+
+.brand-logo__c {
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.48rem;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  transform: translate(0.5px, -1px);
+}
+
+.brand-logo__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.32rem;
+  min-width: 0;
+}
+
+.brand-logo__name {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.55rem, 3.2vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  color: inherit;
+}
+
+.brand-logo__name em {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #8a6d3b;
+}
+
+.brand-logo__tag {
+  position: relative;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6b6458;
+  padding-top: 0.28rem;
+}
+
+.brand-logo__tag::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.6rem;
+  height: 1px;
+  background: #c4a574;
+}
+
+.brand-logo--sm {
+  gap: 0.7rem;
+}
+
+.brand-logo--sm .brand-logo__mark {
+  width: 2.3rem;
+  height: 2.3rem;
+  outline-offset: 2px;
+}
+
+.brand-logo--sm .brand-logo__c {
+  font-size: 1.12rem;
+}
+
+.brand-logo--sm .brand-logo__name {
+  font-size: 1.42rem;
+}
+
+.brand-logo--sm .brand-logo__tag {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+}
+
+.brand-logo--lg {
+  gap: 1rem;
+}
+
+.brand-logo--lg .brand-logo__mark {
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+.brand-logo--lg .brand-logo__c {
+  font-size: 1.72rem;
+}
+
+.brand-logo--lg .brand-logo__name {
+  font-size: 2.2rem;
+}
+
+.brand-logo--invert {
+  color: #faf7f0;
+}
+
+.brand-logo--invert:hover {
+  color: #fff;
+}
+
+.brand-logo--invert .brand-logo__mark {
+  background: #faf7f0;
+  color: #1c1914;
+  outline-color: #faf7f0;
+}
+
+.brand-logo--invert .brand-logo__inner {
+  border-color: rgba(28, 25, 20, 0.18);
+}
+
+.brand-logo--invert .brand-logo__name em {
+  color: #d4b27a;
+}
+
+.brand-logo--invert .brand-logo__tag {
+  color: rgba(250, 247, 240, 0.55);
+}
+
+.nav-heading {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-heading .brand-logo {
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .nav-heading .brand-logo__name {
+    font-size: 1.45rem;
+  }
+
+  .nav-heading .brand-logo__mark {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .nav-heading .brand-logo__c {
+    font-size: 1.12rem;
+  }
+
+  .nav-heading .brand-logo__tag {
+    font-size: 0.55rem;
+  }
+}

@@ -1,45 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import api, { API_BASE_URL } from "../../api/client";
+import { API_BASE_URL } from "../../api/client";
 import "react-quill/dist/quill.snow.css";
 import "./blog.css";
+import "../../Components/editorial/editorial.css";
 import DOMPurify from "dompurify";
-import { AiFillLike } from "react-icons/ai";
 import { useBlog } from "../Blogcontext";
-import ReactPaginate from "react-paginate";
-import { FaAngleLeft } from "react-icons/fa";
-import { FaAngleRight } from "react-icons/fa";
-
-import { FaBookmark } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { ScrollReveal } from "../../Components/motion/ScrollReveal";
 import PageLoader from "../../Components/Loader/PageLoader";
-import { useToast } from "../../Components/Toast/ToastProvider";
-import { addToWishlistWithToast } from "../../utils/wishlistNotify";
 import EmptyState from "../../Components/EmptyState/EmptyState";
+import LikeButton from "../../Components/editorial/LikeButton";
+import SaveButton from "../../Components/editorial/SaveButton";
+import { userHasLiked } from "../../utils/currentUser";
 
-const Blog = ({ serach }) => {
-  const { fetchBlogs, handleLike, blog, blogsLoading } = useBlog();
-  const { showToast } = useToast();
+const Blog = ({ serach = "" }) => {
+  const { fetchBlogs, handleLike, toggleWishlist, isWished, blog, blogsLoading } =
+    useBlog();
 
   const [pages, setPages] = useState(1);
-  const properties_per_page = 12;
+  const properties_per_page = 8;
 
-  const handlepages = (event) => {
-    const pagenumber = event.selected + 1;
-
-    setPages(pagenumber);
+  const goToPage = (next) => {
+    setPages(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
     fetchBlogs();
   }, [fetchBlogs]);
 
-  const wishlist = (id) => {
-    addToWishlistWithToast(api, id, showToast);
-  };
   const filterblog = blog.filter((b) => {
     if (!b) return true;
-    const lowserach = serach.toLowerCase();
+    const lowserach = String(serach || "").toLowerCase();
+    if (!lowserach) return true;
     return (
       b.heading.toLowerCase().includes(lowserach) ||
       b.category.toLowerCase().includes(lowserach) ||
@@ -67,145 +61,172 @@ const Blog = ({ serach }) => {
     pages * properties_per_page
   );
 
-  return (
-    <>
-      <main className="blog-page">
-        <div className="blog-container container">
-          {blogsLoading ? (
-            <PageLoader message="Loading blogs" />
-          ) : (
-            <>
-              <header className="blog-page__hero">
-                <p className="blog-page__kicker">Stories</p>
-                <h1 className="blog-page__title">The archive</h1>
-                <p className="blog-page__lede">
-                  Browse every published piece—filter from the navbar or search to
-                  narrow the list.
-                </p>
-                {filterblog.length > 0 ? (
-                  <p className="blog-page__meta" aria-live="polite">
-                    <span className="blog-page__meta-count">
-                      {filterblog.length} post{filterblog.length !== 1 ? "s" : ""}
-                    </span>
-                    {serach ? (
-                      <span className="blog-page__meta-filter">
-                        · Filtered by &ldquo;{serach}&rdquo;
-                      </span>
-                    ) : null}
-                  </p>
-                ) : null}
-              </header>
+  const PAGE_WINDOW = 5;
+  const windowStart = Math.min(
+    Math.max(1, pages - Math.floor(PAGE_WINDOW / 2)),
+    Math.max(1, pageCount - PAGE_WINDOW + 1)
+  );
+  const windowEnd = Math.min(pageCount, windowStart + PAGE_WINDOW - 1);
+  const visiblePages = [];
+  for (let n = windowStart; n <= windowEnd; n += 1) {
+    visiblePages.push(n);
+  }
 
-              <div className="row g-4 blog-inner-container blog-page__grid">
-                {filterblog.length > 0 ? (
-                  pageSlice.map((post, index) => {
-                      return (
-                        <ScrollReveal
-                          key={post._id || index}
-                          className="blog-page__col col-md-6 col-xl-4"
-                          delay={Math.min(index * 0.06, 0.54)}
+  return (
+    <main className="blog-page">
+      <div className="blog-container container">
+        {blogsLoading ? (
+          <>
+            <header className="blog-page__hero">
+              <p className="blog-page__kicker">The archive</p>
+              <h1 className="blog-page__title">All stories</h1>
+              <p className="blog-page__lede">
+                A quiet index of every published piece. Search or filter from
+                the menu to narrow the list.
+              </p>
+            </header>
+            <PageLoader variant="stories" />
+          </>
+        ) : (
+          <>
+            <header className="blog-page__hero">
+              <p className="blog-page__kicker">The archive</p>
+              <h1 className="blog-page__title">All stories</h1>
+              <p className="blog-page__lede">
+                A quiet index of every published piece. Search or filter from
+                the menu to narrow the list.
+              </p>
+              {filterblog.length > 0 ? (
+                <p className="blog-page__meta" aria-live="polite">
+                  <span className="blog-page__meta-count">
+                    {filterblog.length}{" "}
+                    {filterblog.length === 1 ? "story" : "stories"}
+                  </span>
+                  {serach ? (
+                    <span className="blog-page__meta-filter">
+                      · Filtered by &ldquo;{serach}&rdquo;
+                    </span>
+                  ) : null}
+                </p>
+              ) : null}
+            </header>
+
+            {filterblog.length > 0 ? (
+              <div className="sq-archive">
+                {pageSlice.map((post, index) => {
+                  const num =
+                    (pages - 1) * properties_per_page + index + 1;
+                  return (
+                    <ScrollReveal key={post._id || index} delay={Math.min(index * 0.05, 0.4)}>
+                      <article className="sq-story">
+                        <Link
+                          className="sq-story__media"
+                          to={`/layout/specificblog/${post._id}`}
                         >
-                          <article className="blog-page-card">
-                            <button
-                              type="button"
-                              className="wishlist-bookmark-trigger"
-                              onClick={() => wishlist(post._id)}
-                              aria-label="Save to wishlist"
-                            >
-                              <FaBookmark className="bookmark-icon" />
-                            </button>
+                          <img
+                            src={`${API_BASE_URL}/uploads/${post.image}`}
+                            alt=""
+                          />
+                        </Link>
+                        <div className="sq-story__body">
+                          <div className="sq-story__top">
+                            <span className="sq-story__num">
+                              {String(num).padStart(2, "0")}
+                            </span>
+                            <span className="sq-story__cat">
+                              {post.category}
+                            </span>
+                          </div>
+                          <h2 className="sq-story__title">
                             <Link
-                              className="blog-page-card__link"
+                              to={`/layout/specificblog/${post._id}`}
+                              dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(
+                                  post.heading.slice(0, 140)
+                                ),
+                              }}
+                            />
+                          </h2>
+                          <p className="sq-story__meta">
+                            {post.username} ·{" "}
+                            {new Date(parseInt(post.date)).toLocaleDateString()}
+                          </p>
+                          <div className="sq-story__tools">
+                            <LikeButton
+                              count={post.liked?.length}
+                              active={userHasLiked(post.liked)}
+                              onClick={() => handleLike(post._id)}
+                            />
+                            <SaveButton
+                              active={isWished(post._id)}
+                              onClick={() => toggleWishlist(post._id)}
+                            />
+                            <Link
+                              className="sq-story__read"
                               to={`/layout/specificblog/${post._id}`}
                             >
-                              <div className="blog-page-card__image-wrap">
-                                <img
-                                  className="blog-page-card__img"
-                                  src={`${API_BASE_URL}/uploads/${post.image}`}
-                                  alt=""
-                                />
-                              </div>
-                              <div className="blog-page-card__body">
-                                <span className="blog-page-card__cat">
-                                  {post.category}
-                                </span>
-                                <div
-                                  className="blog-page-card__title"
-                                  dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(
-                                      post.heading.slice(0, 120)
-                                    ),
-                                  }}
-                                />
-                                <span className="blog-page-card__read">
-                                  Read article →
-                                </span>
-                              </div>
+                              Read story
                             </Link>
-                            <div className="blog-page-card__footer">
-                              <span>By {post.username}</span>
-                              <span>
-                                {new Date(
-                                  parseInt(post.date)
-                                ).toLocaleDateString()}
-                              </span>
-                              <button
-                                type="button"
-                                className="like-home"
-                                onClick={() => handleLike(post._id)}
-                              >
-                                <AiFillLike /> {post.liked.length}
-                              </button>
-                            </div>
-                          </article>
-                        </ScrollReveal>
-                      );
-                    })
-                ) : blog.length === 0 ? (
-                  <div className="blog-page__empty">
-                    <EmptyState
-                      title="No blogs yet"
-                      hint="There are no published posts to show. Check back later—or sign in and add a story from the editor if you have access."
-                      className="empty-state--wide"
-                    />
-                  </div>
-                ) : (
-                  <div className="blog-page__empty">
-                    <EmptyState
-                      title="No matching posts"
-                      hint="Nothing matches your current search. Try different keywords or clear the search in the navbar to see all posts."
-                      className="empty-state--wide"
-                    />
-                  </div>
-                )}
+                          </div>
+                        </div>
+                      </article>
+                    </ScrollReveal>
+                  );
+                })}
               </div>
-
-              <div className="pagination_div blog-page__pagination">
-                {filterblog.length > 0 && pageCount > 1 ? (
-              <ReactPaginate
-                previousLabel={<FaAngleLeft />}
-                nextLabel={<FaAngleRight />}
-                breakLabel={"..."}
-                pageCount={pageCount}
-                forcePage={Math.min(pages - 1, pageCount - 1)}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={2}
-                onPageChange={handlepages}
-                containerClassName={"page-btn"}
-                activeClassName={"active-pagination-btn"}
-                previousClassName={"previous-button"}
-                nextClassName={"next-button"}
-                breakClassName={"break-me"}
-                pageClassName={"page-item"}
-                pageLinkClassName={"page-link"}
+            ) : blog.length === 0 ? (
+              <EmptyState
+                title="No blogs yet"
+                hint="There are no published posts to show. Check back later—or sign in and add a story from the editor if you have access."
+                className="empty-state--wide"
               />
-                ) : null}
-              </div>
-            </>
-          )}
-        </div>
-      </main>
-    </>
+            ) : (
+              <EmptyState
+                title="No matching posts"
+                hint="Nothing matches your current search. Try different keywords or clear the search in the navbar to see all posts."
+                className="empty-state--wide"
+              />
+            )}
+
+            {filterblog.length > 0 && pageCount > 1 ? (
+              <nav className="sq-pager" aria-label="Archive pages">
+                <button
+                  type="button"
+                  className="sq-pager__btn"
+                  onClick={() => goToPage(pages - 1)}
+                  disabled={pages <= 1}
+                  aria-label="Previous page"
+                >
+                  <FaAngleLeft aria-hidden />
+                </button>
+                {visiblePages.map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      className={`sq-pager__btn${
+                        n === pages ? " sq-pager__btn--active" : ""
+                      }`}
+                      onClick={() => goToPage(n)}
+                      aria-current={n === pages ? "page" : undefined}
+                    >
+                      {n}
+                    </button>
+                ))}
+                <button
+                  type="button"
+                  className="sq-pager__btn"
+                  onClick={() => goToPage(pages + 1)}
+                  disabled={pages >= pageCount}
+                  aria-label="Next page"
+                >
+                  <FaAngleRight aria-hidden />
+                </button>
+              </nav>
+            ) : null}
+          </>
+        )}
+      </div>
+    </main>
   );
 };
 

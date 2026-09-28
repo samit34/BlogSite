@@ -3,19 +3,21 @@ import api, { API_BASE_URL } from "../../api/client";
 import listFromResponse from "../../api/listFromResponse";
 import { Link } from "react-router-dom";
 import "./Wishlist.css";
+import "../../Components/editorial/editorial.css";
 import DOMPurify from "dompurify";
-import { AiFillLike } from "react-icons/ai";
 import { useBlog } from "../Blogcontext";
-
-import { FaBookmark } from "react-icons/fa";
 import PageLoader from "../../Components/Loader/PageLoader";
 import EmptyState from "../../Components/EmptyState/EmptyState";
+import LikeButton from "../../Components/editorial/LikeButton";
+import SaveButton from "../../Components/editorial/SaveButton";
+import { userHasLiked } from "../../utils/currentUser";
 import { useToast } from "../../Components/Toast/ToastProvider";
 import ConfirmDialog from "../../Components/ConfirmDialog/ConfirmDialog";
 import { removeFromWishlistWithToast } from "../../utils/wishlistNotify";
+import { ScrollReveal } from "../../Components/motion/ScrollReveal";
 
-const Wishlist = ({ serach }) => {
-  const { handleLike } = useBlog();
+const Wishlist = ({ serach = "" }) => {
+  const { handleLike, refreshWishlistIds } = useBlog();
   const { showToast } = useToast();
   const [wishblog, setWishblog] = useState([]);
   const [listLoading, setListLoading] = useState(true);
@@ -25,9 +27,7 @@ const Wishlist = ({ serach }) => {
     if (showLoader) setListLoading(true);
     try {
       const res = await api.post("/user/wish", {});
-      const rows = listFromResponse(res);
-      setWishblog(rows);
-      console.log("Fetched wishlist:", rows);
+      setWishblog(listFromResponse(res));
     } catch (err) {
       console.error("Error fetching wishlist:", err);
     } finally {
@@ -40,12 +40,11 @@ const Wishlist = ({ serach }) => {
   }, [fetchWishlist]);
 
   const handleLikeAndRefresh = async (id) => {
-    try {
-      await handleLike(id);
-
-      fetchWishlist(false);
-    } catch (err) {
-      console.error("Error updating like:", err);
+    const liked = await handleLike(id);
+    if (liked) {
+      setWishblog((prev) =>
+        prev.map((b) => (b._id === id ? { ...b, liked } : b))
+      );
     }
   };
 
@@ -54,18 +53,20 @@ const Wishlist = ({ serach }) => {
     const id = removeTargetId;
     setRemoveTargetId(null);
     const ok = await removeFromWishlistWithToast(api, id, showToast);
-    if (ok) fetchWishlist(false);
+    if (ok) {
+      setWishblog((prev) => prev.filter((b) => String(b._id) !== String(id)));
+      if (refreshWishlistIds) refreshWishlistIds();
+    }
   };
 
+  const query = String(serach || "").toLowerCase();
   const filterblog = wishblog.filter((b) => {
-    console.log("the filter funcation is running ");
-    if (!b) return true;
-
-    const lowserach = serach.toLowerCase();
+    if (!b) return false;
+    if (!query) return true;
     return (
-      b.heading.toLowerCase().includes(lowserach) ||
-      b.category.toLowerCase().includes(lowserach) ||
-      (b.eyecatch && b.eyecatch.toLowerCase().includes(lowserach))
+      b.heading.toLowerCase().includes(query) ||
+      b.category.toLowerCase().includes(query) ||
+      (b.eyecatch && b.eyecatch.toLowerCase().includes(query))
     );
   });
 
@@ -80,64 +81,86 @@ const Wishlist = ({ serach }) => {
         onConfirm={confirmRemoveFromWishlist}
         onCancel={() => setRemoveTargetId(null)}
       />
-      <div className="wishlist-container  container">
-        <h1 className="text-center ">Your Wishlist</h1>
-        <div className="col-md-12 blog-inner-container ">
+      <main className="wishlist-page">
+        <div className="wishlist-page__inner container">
+          <header className="wishlist-page__hero">
+            <p className="wishlist-page__kicker">Saved for later</p>
+            <h1 className="wishlist-page__title">Your wishlist</h1>
+            <p className="wishlist-page__lede">
+              Stories you bookmarked—open them when you have a quiet hour.
+            </p>
+            {filterblog.length > 0 ? (
+              <p className="wishlist-page__meta">
+                {filterblog.length}{" "}
+                {filterblog.length === 1 ? "saved story" : "saved stories"}
+                {query ? ` · Filtered by “${serach}”` : ""}
+              </p>
+            ) : null}
+          </header>
+
           {listLoading ? (
-            <PageLoader message="Loading wishlist" />
+            <PageLoader message="Loading wishlist" variant="stories" />
           ) : filterblog.length > 0 ? (
-            filterblog.map((blog, index) => {
-              return (
-                <div key={index} className=" cards  col-md-4 text-black text">
-                  <div className="inner-card">
-                    <button
-                      type="button"
-                      className="wishlist-remove"
-                      onClick={() => setRemoveTargetId(blog._id)}
-                      aria-label="Remove from wishlist"
+            <div className="sq-archive">
+              {filterblog.map((post, index) => (
+                <ScrollReveal key={post._id || index} delay={Math.min(index * 0.05, 0.4)}>
+                  <article className="sq-story">
+                    <Link
+                      className="sq-story__media"
+                      to={`/layout/specificblog/${post._id}`}
                     >
-                      <FaBookmark className="bookmark-icon" />
-                    </button>
-                    <Link to={`/layout/specificblog/${blog._id}`}>
                       <img
-                        src={`${API_BASE_URL}/uploads/${blog.image}`}
+                        src={`${API_BASE_URL}/uploads/${post.image}`}
                         alt=""
                       />
-                      <div className="card-content ">
-                        <p>{blog.category}</p>
-                        <div
-                          className="card-heading"
+                    </Link>
+                    <div className="sq-story__body">
+                      <div className="sq-story__top">
+                        <span className="sq-story__num">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="sq-story__cat">{post.category}</span>
+                      </div>
+                      <h2 className="sq-story__title">
+                        <Link
+                          to={`/layout/specificblog/${post._id}`}
                           dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(
-                              blog.heading.slice(0, 50)
+                              post.heading.slice(0, 140)
                             ),
                           }}
-                        ></div>
-                      </div>
-                    </Link>
-                    <div className="card-detail">
-                      <p> post By {blog.username}</p>
-
-                      <p>
-                        {new Date(parseInt(blog.date)).toLocaleDateString()}
+                        />
+                      </h2>
+                      <p className="sq-story__meta">
+                        {post.username} ·{" "}
+                        {new Date(parseInt(post.date)).toLocaleDateString()}
                       </p>
-                      <button
-                        className="like-home"
-                        onClick={() => handleLikeAndRefresh(blog._id)}
-                      >
-                        {" "}
-                        <AiFillLike /> {blog.liked.length}
-                      </button>
-                      {/* <button className='whislist-card-btn' onClick={() => wishlist(blog._id)}>add</button> */}
+                      <div className="sq-story__tools">
+                        <LikeButton
+                          count={post.liked?.length}
+                          active={userHasLiked(post.liked)}
+                          onClick={() => handleLikeAndRefresh(post._id)}
+                        />
+                        <SaveButton
+                          active
+                          onClick={() => setRemoveTargetId(post._id)}
+                        />
+                        <Link
+                          className="sq-story__read"
+                          to={`/layout/specificblog/${post._id}`}
+                        >
+                          Read story
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
           ) : wishblog.length === 0 ? (
             <EmptyState
               title="Your wishlist is empty"
-              hint="Browse the blog and tap the bookmark on any article to save it here for later reading."
+              hint="Browse the archive and tap the bookmark on any article to save it here for later."
               className="empty-state--wide"
             />
           ) : (
@@ -148,7 +171,7 @@ const Wishlist = ({ serach }) => {
             />
           )}
         </div>
-      </div>
+      </main>
     </>
   );
 };

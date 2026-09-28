@@ -57,7 +57,10 @@ const Layout = () => {
               path="/wishlist"
               element={<Wishlist serach={serach} />}
             />
-            <Route path="/account" element={<Accountpage />} />
+            <Route
+              path="/account"
+              element={<Accountpage serach={serach} />}
+            />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog serach={serach} />} />
